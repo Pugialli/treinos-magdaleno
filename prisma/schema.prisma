@@ -1,0 +1,80 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Treino {
+  id      String @id @default(uuid())
+  idAluno String @map("id_aluno")
+
+  createdAt  DateTime @default(now()) @map("created_at")
+  modifiedAt DateTime @updatedAt @map("modified_at")
+
+  aluno      Aluno             @relation(fields: [idAluno], references: [id])
+  exercicios ExercicioTreino[]
+
+  @@map("treinos")
+}
+
+model Aluno {
+  id        String   @id @default(uuid())
+  nome      String
+  objetivo  String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  treinos Treino[]
+
+  @@map("alunos")
+}
+
+model ExercicioTreino {
+  id          String  @id @default(uuid())
+  idTreino    String  @map("id_treio")
+  idExercicio String  @map("id_exercicio")
+  ordem       Int
+  carga       String?
+  repeticoes  Int
+  series      Int
+  descanso    String?
+  isometria   String?
+  obs         String?
+
+  exercicio Exercicio @relation(fields: [idExercicio], references: [id])
+  treino    Treino    @relation(fields: [idTreino], references: [id])
+
+  @@map("exercicios_treinos")
+}
+
+model Exercicio {
+  id         String @id @default(uuid())
+  nome       String
+  categoria  String
+  orientacao String
+
+  fotos Foto[]
+
+  exerciciosTreino ExercicioTreino[]
+
+  @@map("exercicios")
+}
+
+model Foto {
+  id          String @id @default(uuid())
+  idExercicio String @map("id_exercicio")
+  avatarUrl   String
+  ordem       Int
+
+  exercicio Exercicio @relation(fields: [idExercicio], references: [id])
+
+  @@map("fotos")
+}
