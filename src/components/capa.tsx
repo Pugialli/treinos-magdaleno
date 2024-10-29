@@ -3,6 +3,7 @@ import logo from '@/assets/logo.svg'
 import { Separator } from '@/components/ui/separator'
 import { Roboto } from 'next/font/google'
 import Image from 'next/image'
+import { SectionWithBackground } from './SectionWithBackground'
 
 const roboto = Roboto({
   weight: '400',
@@ -13,23 +14,22 @@ const roboto = Roboto({
 export function Capa() {
   return (
     <div>
-      <Image
-        src={background}
-        alt=""
-        layout="fill"
-        objectFit="cover"
-        objectPosition="center"
-      />
-      <div className="flex flex-col items-center gap-5 px-28 py-48">
-        <Image src={logo} width={90} height={90} alt="" />
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-primary">Gabriel Magdaleno</h1>
-          <h2 className={`${roboto.className} text-2xl text-muted-foreground`}>
-            Fisioterapeuta & Educador Físico
-          </h2>
+      <SectionWithBackground imageSrc={background}>
+        <div className="absolute flex flex-col items-center gap-5 px-28 py-48">
+          <Image src={logo} width={90} height={90} alt="" />
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-primary">
+              Gabriel Magdaleno
+            </h1>
+            <h2
+              className={`${roboto.className} text-2xl text-muted-foreground`}
+            >
+              Fisioterapeuta & Educador Físico
+            </h2>
+          </div>
         </div>
-      </div>
-      <div className="flex flex-col gap-11 px-9 pb-11 text-center">
+      </SectionWithBackground>
+      <div className="flex flex-col gap-11 px-9 py-11 text-center">
         <span className="text-2xl font-light text-primary">
           TREINO INDIVIDUALIZADO
         </span>
