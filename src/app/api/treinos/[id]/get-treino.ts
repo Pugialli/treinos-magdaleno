@@ -8,6 +8,7 @@ export interface GetTreinoResponse {
   treino: {
     id: string
     createdAt: Date
+    idAluno: string
     exercicios: {
       id: string
       ordem: number
@@ -53,6 +54,7 @@ export async function getTreino({ id }: GetTreinoProps) {
           ordem: 'asc',
         },
       },
+      idAluno: true,
     },
     where: {
       id,

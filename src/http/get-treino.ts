@@ -20,7 +20,8 @@ export interface Exercicio {
 
 interface GetTreinoResponse {
   id: string
-  createdAt: Date
+  createdAt: string
+  idAluno: string
   exercicios: Exercicio[]
 }
 

@@ -16,19 +16,13 @@ const roboto = Roboto({
   display: 'swap',
 })
 
-// export interface CapaPageProps {
-//   params: {
-//     id: string
-//   }
-// }
+export interface CapaPageProps {
+  treinoId: string
+}
 
-export async function Capa() {
-  // const alunoId = params.id
-  const alunoId = '3c035344-961f-4415-abc4-0d48729c663c'
-  const treinoId = '8e8e167b-46ea-4da2-b78e-b8e311f775ec'
-
-  const aluno = await getAluno(alunoId)
+export async function Capa({ treinoId }: CapaPageProps) {
   const treino = await getTreino(treinoId)
+  const aluno = await getAluno(treino.idAluno)
 
   return (
     <div>
