@@ -3,5 +3,11 @@
     "@rocketseat/eslint-config/next",
     "next/core-web-vitals",
     "next/typescript"
-  ]
+  ],
+  "plugins": [
+    "simple-import-sort"
+  ],
+  "rules": {
+    "simple-import-sort/imports": "error"
+  }
 }

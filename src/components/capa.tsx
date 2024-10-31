@@ -1,9 +1,14 @@
+import { Roboto } from 'next/font/google'
+import Image from 'next/image'
+
 import background from '@/assets/background.png'
 import logo from '@/assets/logo.svg'
 import { Separator } from '@/components/ui/separator'
-import { Roboto } from 'next/font/google'
-import Image from 'next/image'
+import { getAluno } from '@/http/get-aluno'
+import { getTreino } from '@/http/get-treino'
+
 import { SectionWithBackground } from './SectionWithBackground'
+import { dateToString } from './utils/string-to-date'
 
 const roboto = Roboto({
   weight: '400',
@@ -11,7 +16,20 @@ const roboto = Roboto({
   display: 'swap',
 })
 
-export function Capa() {
+// export interface CapaPageProps {
+//   params: {
+//     id: string
+//   }
+// }
+
+export async function Capa() {
+  // const alunoId = params.id
+  const alunoId = '3c035344-961f-4415-abc4-0d48729c663c'
+  const treinoId = '8e8e167b-46ea-4da2-b78e-b8e311f775ec'
+
+  const aluno = await getAluno(alunoId)
+  const treino = await getTreino(treinoId)
+
   return (
     <div>
       <SectionWithBackground imageSrc={background}>
@@ -36,22 +54,22 @@ export function Capa() {
         <Separator className="bg-primary" />
         <div className="flex flex-col gap-2">
           <span className="text-sm font-light">Nome do Aluno(a):</span>
-          <span className="font-semibold">Amanda Porto Padilha</span>
+          <span className="font-semibold">{aluno.nome}</span>
         </div>
         <div className="flex flex-col gap-2">
           <span className="text-sm font-light">Objetivo</span>
-          <span>ficar monstrão</span>
+          <span>{aluno.objetivo}</span>
         </div>
         <div className="flex justify-between">
           <div className="flex flex-col gap-2">
             <span className="text-sm font-light">
               Início do acompanhamento:
             </span>
-            <span>31/02/2024</span>
+            <span>{dateToString(new Date(aluno.createdAt))}</span>
           </div>
           <div className="flex flex-col gap-2">
             <span className="text-sm font-light">Data da série atual:</span>
-            <span>06/06/2024</span>
+            <span>{dateToString(new Date(treino.createdAt))}</span>
           </div>
         </div>
       </div>

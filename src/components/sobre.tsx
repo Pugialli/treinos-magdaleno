@@ -1,5 +1,7 @@
-import profile from '@/assets/profile.png'
 import Image from 'next/image'
+
+import profile from '@/assets/profile.png'
+
 import { Separator } from './ui/separator'
 
 export function Sobre() {
