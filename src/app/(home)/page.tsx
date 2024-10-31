@@ -1,9 +1,12 @@
+import { Dumbbell } from 'lucide-react'
 import { Roboto } from 'next/font/google'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import background from '@/assets/background.png'
 import logo from '@/assets/logo.svg'
 import { SectionWithBackground } from '@/components/SectionWithBackground'
+import { Button } from '@/components/ui/button'
 
 const roboto = Roboto({
   weight: '400',
@@ -11,6 +14,7 @@ const roboto = Roboto({
   display: 'swap',
 })
 export default function Home() {
+  const treinoId = '8e8e167b-46ea-4da2-b78e-b8e311f775ec'
   return (
     <main>
       <SectionWithBackground imageSrc={background}>
@@ -26,6 +30,12 @@ export default function Home() {
               Fisioterapeuta & Educador Físico
             </h2>
           </div>
+          <Button size="sm" asChild>
+            <Link href={`/treino/${treinoId}`}>
+              <Dumbbell className="mr-2 size-4" />
+              Ir para o treino
+            </Link>
+          </Button>
         </div>
       </SectionWithBackground>
     </main>
