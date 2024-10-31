@@ -32,6 +32,7 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
 
   const colSpanCarga = exercicio.isometria ? 'col-span-1' : 'col-span-2'
   const colSpanIsometria = exercicio.carga ? 'col-span-1' : 'col-span-2'
+  const colSpanSerie = exercicio.repeticoes ? 'col-span-1' : 'col-span-2'
 
   return (
     <div className="space-y-9">
@@ -66,14 +67,21 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
             </p>
           </Card>
         )}
-        <Card className="col-span-1 flex w-full items-center justify-center border-0 bg-primary/10 py-2">
-          <RefreshCcw className="mr-2 size-4" />
-          <p className="text-lg">
-            Repetições:{' '}
-            <span className="font-bold">{exercicio.repeticoes}</span>
-          </p>
-        </Card>
-        <Card className="col-span-1 flex w-full items-center justify-center border-0 bg-primary/10 py-2">
+        {exercicio.repeticoes && (
+          <Card className="col-span-1 flex w-full items-center justify-center border-0 bg-primary/10 py-2">
+            <RefreshCcw className="mr-2 size-4" />
+            <p className="text-lg">
+              Repetições:{' '}
+              <span className="font-bold">{exercicio.repeticoes}</span>
+            </p>
+          </Card>
+        )}
+        <Card
+          className={cn(
+            colSpanSerie,
+            `flex w-full items-center justify-center border-0 bg-primary/10 py-2`,
+          )}
+        >
           <ChevronsRight className="mr-2 size-4" />
           <p className="text-lg">
             Séries: <span className="font-bold">{exercicio.series}</span>
