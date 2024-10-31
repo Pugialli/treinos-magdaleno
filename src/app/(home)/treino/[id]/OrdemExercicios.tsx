@@ -1,10 +1,9 @@
 import { Roboto } from 'next/font/google'
 
 import backgroundExercicio from '@/assets/background_exercicio.png'
-import { type Exercicio, getTreino } from '@/http/get-treino'
-
-import { SectionWithBackground } from './SectionWithBackground'
-import { Separator } from './ui/separator'
+import { SectionWithBackground } from '@/components/SectionWithBackground'
+import { Separator } from '@/components/ui/separator'
+import { type Exercicio } from '@/http/get-treino'
 
 const roboto = Roboto({
   weight: ['100'],
@@ -12,45 +11,11 @@ const roboto = Roboto({
   display: 'swap',
 })
 
-function agruparPorOrdem(exercicios: Exercicio[]) {
-  const agrupados: Exercicio[][] = []
-
-  exercicios.forEach((exercicio) => {
-    const parteInteira = Math.floor(exercicio.ordem)
-    const parteDecimal = exercicio.ordem % 1
-
-    // Calcula a nova ordem: mantém a parte inteira ou multiplica a parte decimal por 10
-    const novaOrdem =
-      parteDecimal === 0 ? parteInteira : Math.round(parteDecimal * 10)
-
-    // Verifica se já existe um grupo com a mesma parte inteira da ordem
-    let grupo = agrupados.find((g) => Math.floor(g[0].ordem) === parteInteira)
-
-    // Se não existe, cria um novo grupo
-    if (!grupo) {
-      grupo = []
-      agrupados.push(grupo)
-    }
-
-    // Adiciona o exercício ao grupo, ajustando a ordem conforme necessário
-    grupo.push({
-      ...exercicio,
-      ordem: novaOrdem,
-    })
-  })
-
-  return agrupados
+interface OrdemExerciciosProps {
+  exercicios: Exercicio[][]
 }
 
-export interface ExerciciosProps {
-  treinoId: string
-}
-
-export async function Exercicios({ treinoId }: ExerciciosProps) {
-  const treino = await getTreino(treinoId)
-
-  const exercicios = agruparPorOrdem(treino.exercicios)
-
+export async function OrdemExercicios({ exercicios }: OrdemExerciciosProps) {
   return (
     <SectionWithBackground imageSrc={backgroundExercicio}>
       <div className="flex flex-col gap-8 px-9 py-16 text-center">

@@ -10,10 +10,11 @@
     "lint": "next lint"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "5.21.1",
+    "@radix-ui/react-avatar": "^1.1.1",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
@@ -21,6 +22,7 @@
     "ky": "^1.7.2",
     "lucide-react": "^0.454.0",
     "next": "15.0.2",
+    "next-cloudinary": "^6.16.0",
     "react": "19.0.0-rc-02c0e824-20241028",
     "react-dom": "19.0.0-rc-02c0e824-20241028",
     "tailwind-merge": "^2.5.4",

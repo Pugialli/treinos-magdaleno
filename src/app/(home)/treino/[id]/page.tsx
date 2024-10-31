@@ -1,7 +1,8 @@
-import { Capa } from '@/components/Capa'
-import { Exercicios } from '@/components/Exercicios'
-import { Sobre } from '@/components/Sobre'
+import { Capa } from '@/app/(home)/treino/[id]/Capa'
+import { Sobre } from '@/app/(home)/treino/[id]/Sobre'
 import { Separator } from '@/components/ui/separator'
+
+import { Exercicios } from './Exercicios'
 
 export default async function Home({
   params,
@@ -15,6 +16,7 @@ export default async function Home({
       <Sobre />
       <Separator className="bg-black" />
       <Exercicios treinoId={(await params).id} />
+      <Separator className="bg-black" />
     </div>
   )
 }

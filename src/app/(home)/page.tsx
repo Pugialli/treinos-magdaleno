@@ -14,7 +14,7 @@ const roboto = Roboto({
   display: 'swap',
 })
 export default function Home() {
-  const treinoId = '8e8e167b-46ea-4da2-b78e-b8e311f775ec'
+  const treinoId = 'c1f5d8d0-514e-4f68-8c6c-103631f1ec76'
   return (
     <main>
       <SectionWithBackground imageSrc={background}>

@@ -3,12 +3,11 @@ import Image from 'next/image'
 
 import background from '@/assets/background.png'
 import logo from '@/assets/logo.svg'
+import { SectionWithBackground } from '@/components/SectionWithBackground'
 import { Separator } from '@/components/ui/separator'
 import { getAluno } from '@/http/get-aluno'
 import { getTreino } from '@/http/get-treino'
-
-import { SectionWithBackground } from './SectionWithBackground'
-import { dateToString } from './utils/string-to-date'
+import { dateToString } from '@/utils/string-to-date'
 
 const roboto = Roboto({
   weight: '400',
@@ -16,7 +15,7 @@ const roboto = Roboto({
   display: 'swap',
 })
 
-export interface CapaPageProps {
+interface CapaPageProps {
   treinoId: string
 }
 

@@ -43,7 +43,7 @@ model ExercicioTreino {
   idExercicio String  @map("id_exercicio")
   ordem       Float
   carga       String?
-  repeticoes  Int
+  repeticoes  Int?
   series      Int
   descanso    String?
   isometria   String?

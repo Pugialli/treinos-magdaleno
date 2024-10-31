@@ -15,6 +15,10 @@ export interface Exercicio {
     nome: string
     categoria: string
     orientacao: string
+    fotos: {
+      id: string
+      avatarUrl: string
+    }[]
   }
 }
 

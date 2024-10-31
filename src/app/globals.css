@@ -20,11 +20,11 @@ body {
     --secondary-foreground: 348 100% 99%;
     --muted: 60 2% 19%;
     --muted-foreground: 0 0% 76%;
-    --accent: 60 2% 19%;
+    --accent: 0 0% 14%;
     --accent-foreground: 348 100% 99%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 348 100% 99%;
-    --border: 60 2% 19%;
+    --border: 105 50% 84%;
     --input: 240 3.7% 15.9%;
     --ring: 240 4.9% 83.9%;
     --chart-1: 220 70% 50%;

@@ -22,6 +22,10 @@ export interface GetTreinoResponse {
         nome: string
         categoria: string
         orientacao: string
+        fotos: {
+          id: string
+          avatarUrl: string
+        }[]
       }
     }[]
   } | null
@@ -47,6 +51,15 @@ export async function getTreino({ id }: GetTreinoProps) {
               nome: true,
               categoria: true,
               orientacao: true,
+              fotos: {
+                select: {
+                  id: true,
+                  avatarUrl: true,
+                },
+                orderBy: {
+                  ordem: 'asc',
+                },
+              },
             },
           },
         },
