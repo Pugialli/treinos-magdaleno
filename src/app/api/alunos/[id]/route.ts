@@ -2,12 +2,11 @@ import { NextResponse } from 'next/server'
 
 import { getAluno } from './get-aluno'
 
-interface AlunoProps {
-  id: string
-}
-
-export async function GET(request: Request, context: { params: AlunoProps }) {
-  const aluno = await getAluno({ id: context.params.id })
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const aluno = await getAluno({ id: (await params).id })
 
   return NextResponse.json(aluno)
 }
