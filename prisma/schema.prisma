@@ -13,6 +13,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String?  @map("password_hash")
+  avatarUrl    String?  @map("avatar_url")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  tokens    Token[]
+  alunos    Aluno[]
+  Exercicio Exercicio[]
+
+  @@map("users")
+}
+
+enum TokenType {
+  PASSWORD_RECOVER
+}
+
+model Token {
+  id        String    @id @default(uuid())
+  type      TokenType
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @map("user_id")
+
+  @@map("tokens")
+}
+
 model Treino {
   id      String @id @default(uuid())
   idAluno String @map("id_aluno")
@@ -27,12 +58,15 @@ model Treino {
 }
 
 model Aluno {
-  id        String   @id @default(uuid())
-  nome      String
-  objetivo  String
-  createdAt DateTime @default(now()) @map("created_at")
+  id          String   @id @default(uuid())
+  slug        String   @unique
+  idProfessor String   @map("id_professor")
+  nome        String
+  objetivo    String
+  createdAt   DateTime @default(now()) @map("created_at")
 
-  treinos Treino[]
+  treinos   Treino[]
+  professor User     @relation(fields: [idProfessor], references: [id])
 
   @@map("alunos")
 }
@@ -56,14 +90,16 @@ model ExercicioTreino {
 }
 
 model Exercicio {
-  id         String @id @default(uuid())
-  nome       String
-  categoria  String
-  orientacao String
+  id          String @id @default(uuid())
+  idProfessor String @map("id_professor")
+  nome        String
+  categoria   String
+  orientacao  String
 
-  fotos Foto[]
-
+  fotos            Foto[]
   exerciciosTreino ExercicioTreino[]
+
+  professor User @relation(fields: [idProfessor], references: [id])
 
   @@map("exercicios")
 }

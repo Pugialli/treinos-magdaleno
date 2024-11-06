@@ -4,16 +4,18 @@ import { api } from './api-client'
 
 interface GetAlunoResponse {
   id: string
+  idProfessor: string
   nome: string
+  slug: string
   objetivo: string
   createdAt: string
 }
 
-export async function getAluno(alunoId: string) {
+export async function getAluno(alunoSlug: string) {
   const result = await api
-    .get(`alunos/${alunoId}`, {
+    .get(`alunos/${alunoSlug}`, {
       next: {
-        tags: [`aluno/${alunoId}`],
+        tags: [`aluno/${alunoSlug}`],
       },
     })
     .json<GetAlunoResponse>()

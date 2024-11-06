@@ -1,17 +1,17 @@
-import { Capa } from '@/app/(home)/treino/[id]/Capa'
-import { Sobre } from '@/app/(home)/treino/[id]/Sobre'
+import { Capa } from '@/app/(home)/aluno/[slug]/treino/[id]/Capa'
+import { Sobre } from '@/app/(home)/aluno/[slug]/treino/[id]/Sobre'
 import { Separator } from '@/components/ui/separator'
 
 import { Exercicios } from './Exercicios'
 
-export default async function Home({
+export default async function Treino({
   params,
 }: {
-  params: Promise<{ id: string }>
+  params: Promise<{ slug: string; id: string }>
 }) {
   return (
     <div>
-      <Capa treinoId={(await params).id} />
+      <Capa treinoId={(await params).id} alunoSlug={(await params).slug} />
       <Separator className="bg-black" />
       <Sobre />
       <Separator className="bg-black" />

@@ -7,13 +7,21 @@ import background from '@/assets/background.png'
 import logo from '@/assets/logo.svg'
 import { SectionWithBackground } from '@/components/SectionWithBackground'
 import { Button } from '@/components/ui/button'
+import { getAluno } from '@/http/get-aluno'
 
 const roboto = Roboto({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
 })
-export default function Home() {
+
+export default async function Aluno({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const aluno = await getAluno((await params).slug)
+
   const treinoId = 'c296c6ce-e20e-4bdb-98b0-dcdf1521dca4'
   return (
     <main>
@@ -31,9 +39,15 @@ export default function Home() {
             </h2>
           </div>
           <Button size="sm" asChild>
-            <Link href={`/treino/${treinoId}`}>
+            <Link href={`/aluno/${aluno.slug}/treino/${treinoId}`}>
               <Dumbbell className="mr-2 size-4" />
-              Ir para o treino
+              Ir para o último treino de {aluno.nome}
+            </Link>
+          </Button>
+          <Button size="sm" asChild>
+            <Link href={`/aluno/${aluno.slug}/create-treino`}>
+              <Dumbbell className="mr-2 size-4" />
+              Criar um novo treino para {aluno.nome}
             </Link>
           </Button>
         </div>

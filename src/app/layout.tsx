@@ -3,6 +3,8 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
 
+import { Providers } from './providers'
+
 const montserrat = Montserrat({
   subsets: ['latin'],
   display: 'swap',
@@ -19,9 +21,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${montserrat.className} w-[600px] antialiased`}>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   )

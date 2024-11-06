@@ -1,22 +1,24 @@
 import { prisma } from '@/lib/prisma'
 
 interface GetAlunoProps {
-  id: string
+  slug: string
 }
 
 export interface GetAlunoResponse {
   aluno: {
     id: string
+    idProfessor: string
+    slug: string
     nome: string
     objetivo: string
     createdAt: string
   } | null
 }
 
-export async function getAluno({ id }: GetAlunoProps) {
+export async function getAluno({ slug }: GetAlunoProps) {
   return await prisma.aluno.findUnique({
     where: {
-      id,
+      slug,
     },
   })
 }

@@ -17,11 +17,12 @@ const roboto = Roboto({
 
 interface CapaPageProps {
   treinoId: string
+  alunoSlug: string
 }
 
-export async function Capa({ treinoId }: CapaPageProps) {
+export async function Capa({ treinoId, alunoSlug }: CapaPageProps) {
   const treino = await getTreino(treinoId)
-  const aluno = await getAluno(treino.idAluno)
+  const aluno = await getAluno(alunoSlug)
 
   return (
     <div>

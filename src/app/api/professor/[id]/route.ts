@@ -1,12 +1,12 @@
 import { NextResponse } from 'next/server'
 
-import { getAluno } from './get-aluno'
+import { getProfessor } from './get-professor'
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
-  const aluno = await getAluno({ id: (await params).id })
+  const response = await getProfessor({ id: (await params).id })
 
-  return NextResponse.json(aluno)
+  return NextResponse.json(response)
 }
