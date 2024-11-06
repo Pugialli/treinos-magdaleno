@@ -5,6 +5,7 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 
 ### Autenticação
 - [x] logar;
+- [ ] deslogar;
 
 ### Aluno
 - [x] ⁠criar um aluno;
@@ -34,4 +35,4 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 - [ ] ⁠reordenar as fotos de um exercício;
 
 ## Pontos de correção antes do go-live
--
+❌
