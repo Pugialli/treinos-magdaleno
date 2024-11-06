@@ -14,6 +14,7 @@ const roboto = Roboto({
   display: 'swap',
 })
 export default function Home() {
+  const alunoSlug = 'amanda-padilha'
   const treinoId = 'c296c6ce-e20e-4bdb-98b0-dcdf1521dca4'
   return (
     <main>
@@ -31,7 +32,7 @@ export default function Home() {
             </h2>
           </div>
           <Button size="sm" asChild>
-            <Link href={`/treino/${treinoId}`}>
+            <Link href={`aluno/${alunoSlug}/treino/${treinoId}`}>
               <Dumbbell className="mr-2 size-4" />
               Ir para o treino
             </Link>
