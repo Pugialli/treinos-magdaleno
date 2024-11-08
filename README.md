@@ -5,7 +5,7 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 
 ### Autenticação
 - [x] logar;
-- [ ] deslogar;
+- [x] deslogar;
 
 ### Aluno
 - [x] ⁠criar um aluno;

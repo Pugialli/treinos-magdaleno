@@ -9,6 +9,10 @@ export async function isAuthenticated() {
   return !!(await cookies()).get('treino-token')?.value
 }
 
+export async function logUserOut() {
+  return (await cookies()).delete('treino-token')
+}
+
 export async function loggedUser() {
   const token = (await cookies()).get('treino-token')?.value
 
@@ -26,10 +30,9 @@ export async function auth() {
   }
 
   try {
-    const { user } = await getProfile()
+    const user = await getProfile(token)
 
-    return { user }
+    return user
   } catch {}
-
   redirect('/api/auth/sign-out')
 }
