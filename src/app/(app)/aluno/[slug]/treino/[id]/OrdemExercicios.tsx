@@ -1,7 +1,7 @@
 import { Roboto } from 'next/font/google'
 
 import backgroundExercicio from '@/assets/background_exercicio.png'
-import { SectionWithBackground } from '@/components/SectionWithBackground'
+import { SectionWithBackground } from '@/components/section-with-background'
 import { Separator } from '@/components/ui/separator'
 import { type Exercicio } from '@/http/get-treino'
 

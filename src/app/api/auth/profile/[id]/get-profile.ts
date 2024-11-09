@@ -10,8 +10,15 @@ export interface ProfileData {
   }
 }
 
-export async function getProfile() {
-  const user = await prisma.user.findFirst({
+interface GetProfileProps {
+  id: string
+}
+
+export async function getProfile({ id }: GetProfileProps) {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
     select: {
       id: true,
       name: true,

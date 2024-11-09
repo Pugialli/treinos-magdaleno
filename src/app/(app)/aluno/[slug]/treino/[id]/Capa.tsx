@@ -3,11 +3,12 @@ import Image from 'next/image'
 
 import background from '@/assets/background.png'
 import logo from '@/assets/logo.svg'
-import { SectionWithBackground } from '@/components/SectionWithBackground'
+import { SectionWithBackground } from '@/components/section-with-background'
 import { Separator } from '@/components/ui/separator'
 import { getAluno } from '@/http/get-aluno'
 import { getTreino } from '@/http/get-treino'
 import { dateToString } from '@/utils/string-to-date'
+import { redirect } from 'next/navigation'
 
 const roboto = Roboto({
   weight: '400',
@@ -23,6 +24,8 @@ interface CapaPageProps {
 export async function Capa({ treinoId, alunoSlug }: CapaPageProps) {
   const treino = await getTreino(treinoId)
   const aluno = await getAluno(alunoSlug)
+
+  if (!aluno) redirect('/')
 
   return (
     <div>

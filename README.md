@@ -11,13 +11,14 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 - [x] ⁠criar um aluno;
 - [ ] ⁠editar um aluno;
 - [ ] ⁠deletar um aluno;
-- [ ] ⁠visualizar todos seus alunos;
+- [x] ⁠visualizar todos seus alunos;
 
 ### Treino
 - [ ] ⁠criar um treino para um  dado aluno;
 - [ ] ⁠editar um treino de um  dado aluno;
 - [ ] ⁠deletar um treino de um dado aluno;
-- [ ] ⁠visualizar todos os treinos de um aluno;
+- [x] ⁠visualizar todos os treinos de um aluno;
+- [x] ⁠visualizar o último treino de um aluno;
 - [ ] ⁠trocar a ordem dos exercícios de um treino;
 - [ ] ⁠gerar um pdf com o treino;
 - [ ] ⁠duplicar um treino de um aluno para outro ou para o mesmo;
@@ -35,4 +36,4 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 - [ ] ⁠reordenar as fotos de um exercício;
 
 ## Pontos de correção antes do go-live
-❌
+- Criar a rota do delete aluno

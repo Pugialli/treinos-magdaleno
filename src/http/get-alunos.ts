@@ -2,13 +2,15 @@
 
 import { api } from './api-client'
 
-interface GetAlunosResponse {
-  alunos: {
+export interface GetAlunosResponse {
+  id: string
+  idProfessor: string
+  nome: string
+  slug: string
+  objetivo: string
+  createdAt: string
+  treinos: {
     id: string
-    idProfessor: string
-    nome: string
-    slug: string
-    objetivo: string
     createdAt: string
   }[]
 }
@@ -20,7 +22,7 @@ export async function getAlunos(idProfessor: string) {
         tags: [`${idProfessor}/alunos`],
       },
     })
-    .json<GetAlunosResponse>()
+    .json<GetAlunosResponse[]>()
 
   return result
 }

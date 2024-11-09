@@ -1,5 +1,5 @@
-import { Capa } from '@/app/(home)/aluno/[slug]/treino/[id]/Capa'
-import { Sobre } from '@/app/(home)/aluno/[slug]/treino/[id]/Sobre'
+import { Capa } from '@/app/(app)/aluno/[slug]/treino/[id]/Capa'
+import { Sobre } from '@/app/(app)/aluno/[slug]/treino/[id]/Sobre'
 import { Separator } from '@/components/ui/separator'
 
 import { Exercicios } from './Exercicios'

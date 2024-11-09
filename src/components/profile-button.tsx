@@ -1,4 +1,5 @@
 import { ChevronDown, LogOut } from 'lucide-react'
+import { redirect } from 'next/navigation'
 
 import { auth } from '@/auth/auth'
 
@@ -22,6 +23,8 @@ function getInitials(name: string): string {
 
 export async function ProfileButton() {
   const user = await auth()
+
+  if (!user) redirect('/')
 
   const AvatarFB = user.name ? getInitials(user.name) : 'UK'
 

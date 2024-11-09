@@ -2,7 +2,6 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { AlertTriangle, BadgeCheck, Loader2 } from 'lucide-react'
-import { useParams } from 'next/navigation'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -21,10 +20,17 @@ import { getAluno } from '@/http/get-aluno'
 import { getAlunos } from '@/http/get-alunos'
 import { queryClient } from '@/lib/react-query'
 
+import { useSearchParams } from 'next/navigation'
 import { createTreinoAction } from './actions'
 
-export function TreinoForm() {
-  const { slug: alunoSlug } = useParams<{ slug: string }>()
+interface TreinoFormProps {
+  idProfessor: string
+}
+
+export function TreinoForm({idProfessor}: TreinoFormProps) {
+  const searchParams = useSearchParams()
+
+  const alunoSlug = searchParams.get('aluno')
 
   const { data: currentAluno } = useQuery({
     queryKey: ['aluno', alunoSlug],
@@ -32,10 +38,9 @@ export function TreinoForm() {
     enabled: !!alunoSlug,
   })
 
-  const { data } = useQuery({
+  const { data: alunos } = useQuery({
     queryKey: ['alunos', currentAluno?.idProfessor],
-    queryFn: () => getAlunos(currentAluno!.idProfessor),
-    enabled: !!currentAluno,
+    queryFn: () => getAlunos(idProfessor),
   })
 
   const [{ success, message, errors }, handleSubmit, isPending] = useFormState(
@@ -47,12 +52,12 @@ export function TreinoForm() {
     },
   )
 
-  console.log(data)
-
   // const currentProject =
   //   data && projectSlug
   //     ? data.projects.find((project) => project.slug === projectSlug)
   //     : null
+
+  const defaultAluno = currentAluno ? currentAluno.id : ''
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -77,14 +82,14 @@ export function TreinoForm() {
       )}
       <div className="space-y-1">
         <Label htmlFor="aluno">Aluno</Label>
-        {currentAluno && data ? (
-          <Select name="aluno" defaultValue={currentAluno.id}>
+        {alunos ? (
+          <Select name="aluno" defaultValue={defaultAluno}>
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {data &&
-                data.alunos.map((aluno) => {
+              {alunos &&
+                alunos.map((aluno) => {
                   return (
                     <SelectItem key={aluno.id} value={aluno.id}>
                       {aluno.nome}
@@ -118,7 +123,7 @@ export function TreinoForm() {
         {isPending ? (
           <Loader2 className="size-4 animate-spin" />
         ) : (
-          'Save project'
+          'Salvar treino'
         )}
       </Button>
     </form>

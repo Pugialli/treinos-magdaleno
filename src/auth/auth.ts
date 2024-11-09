@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { getAlunos } from '@/http/get-alunos'
 import { getProfessor } from '@/http/get-professor'
 import { getProfile } from '@/http/get-profile'
 import { decrypt } from '@/utils/crypto'
@@ -10,7 +11,7 @@ export async function isAuthenticated() {
 }
 
 export async function logUserOut() {
-  return (await cookies()).delete('treino-token')
+  ;(await cookies()).delete('treino-token')
 }
 
 export async function loggedUser() {
@@ -22,6 +23,15 @@ export async function loggedUser() {
 
   return await getProfessor(idProfessor)
 }
+
+export async function getCurrentAlunos() {
+  const professor = await loggedUser()
+
+  if (!professor) return null
+
+  return await getAlunos(professor.id)
+}
+
 export async function auth() {
   const token = (await cookies()).get('treino-token')?.value
 
@@ -33,6 +43,7 @@ export async function auth() {
     const user = await getProfile(token)
 
     return user
-  } catch {}
-  redirect('/api/auth/sign-out')
+  } catch {
+    redirect('/api/auth/sign-out')
+  }
 }
