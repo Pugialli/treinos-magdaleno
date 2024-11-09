@@ -2,6 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { AlertTriangle, BadgeCheck, Loader2 } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -20,14 +21,13 @@ import { getAluno } from '@/http/get-aluno'
 import { getAlunos } from '@/http/get-alunos'
 import { queryClient } from '@/lib/react-query'
 
-import { useSearchParams } from 'next/navigation'
 import { createTreinoAction } from './actions'
 
 interface TreinoFormProps {
   idProfessor: string
 }
 
-export function TreinoForm({idProfessor}: TreinoFormProps) {
+export function TreinoForm({ idProfessor }: TreinoFormProps) {
   const searchParams = useSearchParams()
 
   const alunoSlug = searchParams.get('aluno')

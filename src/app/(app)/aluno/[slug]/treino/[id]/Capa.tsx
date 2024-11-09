@@ -1,5 +1,6 @@
 import { Roboto } from 'next/font/google'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 
 import background from '@/assets/background.png'
 import logo from '@/assets/logo.svg'
@@ -8,7 +9,6 @@ import { Separator } from '@/components/ui/separator'
 import { getAluno } from '@/http/get-aluno'
 import { getTreino } from '@/http/get-treino'
 import { dateToString } from '@/utils/string-to-date'
-import { redirect } from 'next/navigation'
 
 const roboto = Roboto({
   weight: '400',

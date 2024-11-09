@@ -1,9 +1,10 @@
+import { redirect } from 'next/navigation'
+
 import { auth } from '@/auth/auth'
 import { InterceptedSheetContent } from '@/components/intercepted-sheet-content'
 import { Sheet, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { redirect } from 'next/navigation'
-import { TreinoForm } from '../../create-treino/treino-form'
 
+import { TreinoForm } from '../../create-treino/treino-form'
 
 export default async function CreateTreino() {
   const user = await auth()
