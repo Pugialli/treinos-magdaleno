@@ -18,5 +18,9 @@ export async function POST(request: NextRequest) {
 
   const userToken = await signInRequest(credendials)
 
+  if (userToken instanceof NextResponse) {
+    return userToken
+  }
+
   return NextResponse.json(userToken, { status: 200 })
 }

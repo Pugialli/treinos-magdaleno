@@ -43,7 +43,8 @@ export async function auth() {
     const user = await getProfile(token)
 
     return user
-  } catch {
+  } catch (err) {
+    console.log(err)
     redirect('/api/auth/sign-out')
   }
 }

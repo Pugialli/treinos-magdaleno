@@ -9,7 +9,7 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 
 ### Aluno
 - [x] ⁠criar um aluno;
-- [ ] ⁠editar um aluno;
+- [x] ⁠editar um aluno;
 - [ ] ⁠deletar um aluno;
 - [x] ⁠visualizar todos seus alunos;
 

@@ -1,13 +1,13 @@
 import { redirect } from 'next/navigation'
 
-import { auth } from '@/auth/auth'
+import { loggedUser } from '@/auth/auth'
 import { InterceptedSheetContent } from '@/components/intercepted-sheet-content'
 import { Sheet, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 
 import { TreinoForm } from '../../create-treino/treino-form'
 
 export default async function CreateTreino() {
-  const user = await auth()
+  const user = await loggedUser()
 
   if (!user) redirect('/')
 

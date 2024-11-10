@@ -1,7 +1,7 @@
 import { ChevronDown, LogOut } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
-import { auth } from '@/auth/auth'
+import { loggedUser } from '@/auth/auth'
 
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import {
@@ -22,7 +22,7 @@ function getInitials(name: string): string {
 }
 
 export async function ProfileButton() {
-  const user = await auth()
+  const user = await loggedUser()
 
   if (!user) redirect('/')
 

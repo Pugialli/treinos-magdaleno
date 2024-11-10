@@ -7,12 +7,20 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useFormState } from '@/hooks/use-form-state'
+import type { GetAlunoResponse } from '@/http/get-aluno'
 
-import { createAlunoAction } from './actions'
+import { createAlunoAction, updateAlunoAction } from './actions'
 
-export function AlunoForm() {
+interface AlunoFormProps {
+  isUpdating?: boolean
+  initialData?: GetAlunoResponse
+}
+
+export function AlunoForm({ isUpdating = false, initialData }: AlunoFormProps) {
+  const formAction = isUpdating ? updateAlunoAction : createAlunoAction
+
   const [{ success, message, errors }, handleSubmit, isPending] =
-    useFormState(createAlunoAction)
+    useFormState(formAction)
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -35,9 +43,16 @@ export function AlunoForm() {
           </AlertDescription>
         </Alert>
       )}
+      <Input
+        name="slug"
+        id="slug"
+        type="hidden"
+        defaultValue={initialData?.slug}
+      />
+
       <div className="space-y-1">
         <Label htmlFor="nome">Nome</Label>
-        <Input name="nome" id="nome" />
+        <Input name="nome" id="nome" defaultValue={initialData?.nome} />
         {errors?.description && (
           <p className="text-xs font-medium text-red-500 dark:text-red-400">
             {errors.description[0]}
@@ -46,7 +61,11 @@ export function AlunoForm() {
       </div>
       <div className="space-y-1">
         <Label htmlFor="objetivo">Objetivo</Label>
-        <Input name="objetivo" id="objetivo" />
+        <Input
+          name="objetivo"
+          id="objetivo"
+          defaultValue={initialData?.objetivo}
+        />
         {errors?.description && (
           <p className="text-xs font-medium text-red-500 dark:text-red-400">
             {errors.description[0]}

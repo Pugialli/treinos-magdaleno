@@ -1,9 +1,8 @@
 import { compare } from 'bcryptjs'
+import { NextResponse } from 'next/server'
 
 import { prisma } from '@/lib/prisma'
 import { encrypt } from '@/utils/crypto'
-
-import { BadRequestError } from '../../_errors/bad-request-error'
 
 interface LoginProps {
   email: string
@@ -25,27 +24,22 @@ export async function signInRequest({ email, password }: LoginProps) {
   })
 
   if (!userExists) {
-    throw new BadRequestError('Invalid credentials.')
+    return NextResponse.json('', {
+      status: 401,
+      statusText: 'User or password incorrect',
+    })
   }
-
-  // if (!userExists) {
-  //   return NextResponse.json('', { status: 404, statusText: 'User not found' })
-  // }
 
   const isPasswordValid = userExists.passwordHash
     ? await compare(password, userExists.passwordHash)
     : false
 
   if (!isPasswordValid) {
-    throw new BadRequestError('Invalid credentials.')
+    return NextResponse.json('', {
+      status: 401,
+      statusText: 'User or password incorrect',
+    })
   }
-
-  // if (!passwordCorrect) {
-  //   return NextResponse.json('', {
-  //     status: 401,
-  //     statusText: 'User or password incorrect',
-  //   })
-  // }
 
   const user: UserResponse = {
     id: userExists.id,

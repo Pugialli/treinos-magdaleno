@@ -7,10 +7,8 @@ import { z } from 'zod'
 import { signInWithPassword } from '@/http/sign-in-with-password'
 
 const signInSchema = z.object({
-  email: z
-    .string()
-    .email({ message: 'Please, provide a valid e-mail address.' }),
-  password: z.string().min(1, { message: 'Please, provide your password' }),
+  email: z.string().email({ message: 'Email inválido' }),
+  password: z.string().min(1, { message: 'Senha inválida' }),
 })
 
 export async function signInWithEmailAndPassword(data: FormData) {
@@ -38,15 +36,16 @@ export async function signInWithEmailAndPassword(data: FormData) {
     })
   } catch (err) {
     if (err instanceof HTTPError) {
-      const { message } = await err.response.json()
+      const { statusText } = err.response
+      // const { message } = await err.response.json()
 
-      return { success: false, message, errors: null }
+      return { success: false, message: statusText, errors: null }
     }
 
     console.error(err)
     return {
       success: false,
-      message: 'Unexpected error, try again in a few minutes',
+      message: 'Erro inesperado, tente novamente em alguns minutos',
       errors: null,
     }
   }

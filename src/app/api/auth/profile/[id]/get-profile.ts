@@ -1,4 +1,5 @@
-import { BadRequestError } from '@/app/api/_errors/bad-request-error'
+import { NextResponse } from 'next/server'
+
 import { prisma } from '@/lib/prisma'
 
 export interface ProfileData {
@@ -28,7 +29,10 @@ export async function getProfile({ id }: GetProfileProps) {
   })
 
   if (!user) {
-    throw new BadRequestError('User not found')
+    return NextResponse.json('', {
+      status: 401,
+      statusText: 'User or password incorrect',
+    })
   }
 
   return { user }

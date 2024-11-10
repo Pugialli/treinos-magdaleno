@@ -8,5 +8,9 @@ export async function GET(
 ) {
   const profile = await getProfile({ id: (await params).id })
 
+  if (profile instanceof NextResponse) {
+    return profile
+  }
+
   return NextResponse.json(profile.user)
 }

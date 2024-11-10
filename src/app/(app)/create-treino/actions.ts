@@ -6,7 +6,7 @@ import { z } from 'zod'
 import { createTreino } from '@/http/create-treino'
 
 const treinoSchema = z.object({
-  name: z.string().min(4, { message: 'Please include at least 4 characters' }),
+  name: z.string().min(4, { message: 'O nome deve ter ao menos 4 letras' }),
   description: z.string(),
 })
 

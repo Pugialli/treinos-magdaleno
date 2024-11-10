@@ -1,12 +1,12 @@
 import { redirect } from 'next/navigation'
 
-import { auth } from '@/auth/auth'
+import { loggedUser } from '@/auth/auth'
 import { Header } from '@/components/header'
 
 import { TreinoForm } from './treino-form'
 
 export default async function CreateTreino() {
-  const user = await auth()
+  const user = await loggedUser()
 
   if (!user) redirect('/')
 
