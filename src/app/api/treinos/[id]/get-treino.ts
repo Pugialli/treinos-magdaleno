@@ -4,6 +4,26 @@ interface GetTreinoProps {
   id: string
 }
 
+export interface ExercicioFromTreino {
+  id: string
+  ordem: number
+  carga: string | null
+  repeticoes: number
+  series: number
+  descanso: string | null
+  isometria: string | null
+  obs: string | null
+  exercicio: {
+    nome: string
+    categoria: string
+    orientacao: string
+    fotos: {
+      id: string
+      avatarUrl: string
+    }[]
+  }
+}
+
 export interface GetTreinoResponse {
   id: string
   createdAt: Date
@@ -11,25 +31,7 @@ export interface GetTreinoResponse {
     id: string
     idProfessor: string
   }
-  exercicios: {
-    id: string
-    ordem: number
-    carga: string | null
-    repeticoes: number
-    series: number
-    descanso: string | null
-    isometria: string | null
-    obs: string | null
-    exercicio: {
-      nome: string
-      categoria: string
-      orientacao: string
-      fotos: {
-        id: string
-        avatarUrl: string
-      }[]
-    }
-  }[]
+  exercicios: ExercicioFromTreino[]
 }
 
 export async function getTreino({ id }: GetTreinoProps) {

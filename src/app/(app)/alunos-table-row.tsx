@@ -8,10 +8,11 @@ import { DeleteAlunoDialog } from '@/components/delete-aluno-dialog'
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
-import type { GetAlunosResponse } from '@/http/get-alunos'
+
+import type { GetAlunosWithTreinoResponse } from '../api/professor/[id]/alunos/get-alunos'
 
 interface AlunosTableRowProps {
-  aluno: GetAlunosResponse
+  aluno: GetAlunosWithTreinoResponse
 }
 
 export function AlunosTablerow({ aluno }: AlunosTableRowProps) {

@@ -8,13 +8,13 @@ import {
 import { Roboto } from 'next/font/google'
 import Image from 'next/image'
 
+import type { ExercicioFromTreino } from '@/app/api/treinos/[id]/get-treino'
 import { Card } from '@/components/ui/card'
-import type { Exercicio } from '@/http/get-treino'
 import { cn } from '@/lib/utils'
 import { orientacaoToPassos } from '@/utils/orientacao-passos'
 
 export interface ExercicioDetalhadoProps {
-  exercicio: Exercicio
+  exercicio: ExercicioFromTreino
 }
 
 const roboto = Roboto({

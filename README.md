@@ -37,3 +37,4 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 
 ## Pontos de correção antes do go-live
 ❌
+- Alterar o remove das listas adicionando as actions

@@ -1,10 +1,10 @@
+import type { ExercicioFromTreino } from '@/app/api/treinos/[id]/get-treino'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import type { Exercicio } from '@/http/get-treino'
 
 import { ExercicioDetalhado } from './ExercicioDetalhado'
 
 export interface ConjugadoDetalhadoProps {
-  exercicios: Exercicio[]
+  exercicios: ExercicioFromTreino[]
 }
 
 export function ConjugadoDetalhado({ exercicios }: ConjugadoDetalhadoProps) {

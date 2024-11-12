@@ -1,12 +1,13 @@
+import type { ExercicioFromTreino } from '@/app/api/treinos/[id]/get-treino'
 import { Separator } from '@/components/ui/separator'
-import { type Exercicio, getTreino } from '@/http/get-treino'
+import { getTreino } from '@/http/get-treino'
 
 import { ConjugadoDetalhado } from './ConjugadoDetalhado'
 import { ExercicioDetalhado } from './ExercicioDetalhado'
 import { OrdemExercicios } from './OrdemExercicios'
 
-function agruparPorOrdem(exercicios: Exercicio[]) {
-  const agrupados: Exercicio[][] = []
+function agruparPorOrdem(exercicios: ExercicioFromTreino[]) {
+  const agrupados: ExercicioFromTreino[][] = []
 
   exercicios.forEach((exercicio) => {
     const parteInteira = Math.floor(exercicio.ordem)

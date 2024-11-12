@@ -4,11 +4,11 @@ import { CircleX, Pencil } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
+import type { GetExercicioResponse } from '@/app/api/exercicios/[id]/get-exercicio'
 import { DeleteExercicioDialog } from '@/components/delete-exercicio-dialog'
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
-import type { GetExercicioResponse } from '@/http/get-exercicios'
 import { orientacaoToPassos } from '@/utils/orientacao-passos'
 
 interface ExerciciosTableRowProps {

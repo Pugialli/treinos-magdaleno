@@ -9,13 +9,13 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 
+import type { GetExercicioResponse } from '@/app/api/exercicios/[id]/get-exercicio'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { useFormState } from '@/hooks/use-form-state'
-import type { GetExercicioResponse } from '@/http/get-exercicios'
 import { orientacaoToPassos } from '@/utils/orientacao-passos'
 
 import { createExercicioAction, updateExercicioAction } from './actions'

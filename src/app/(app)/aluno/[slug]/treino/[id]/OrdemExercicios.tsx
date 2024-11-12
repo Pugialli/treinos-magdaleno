@@ -1,9 +1,9 @@
 import { Roboto } from 'next/font/google'
 
+import type { ExercicioFromTreino } from '@/app/api/treinos/[id]/get-treino'
 import backgroundExercicio from '@/assets/background_exercicio.png'
 import { SectionWithBackground } from '@/components/section-with-background'
 import { Separator } from '@/components/ui/separator'
-import { type Exercicio } from '@/http/get-treino'
 
 const roboto = Roboto({
   weight: ['100'],
@@ -12,7 +12,7 @@ const roboto = Roboto({
 })
 
 interface OrdemExerciciosProps {
-  exercicios: Exercicio[][]
+  exercicios: ExercicioFromTreino[][]
 }
 
 export async function OrdemExercicios({ exercicios }: OrdemExerciciosProps) {

@@ -1,6 +1,6 @@
 'use server'
 
-import type { GetAlunoResponse } from '@/app/api/alunos/[slug]/get-aluno'
+import type { GetAlunosWithTreinoResponse } from '@/app/api/professor/[id]/alunos/get-alunos'
 
 import { api } from './api-client'
 
@@ -11,7 +11,7 @@ export async function getAlunos(idProfessor: string) {
         tags: [`${idProfessor}/alunos`],
       },
     })
-    .json<GetAlunoResponse[]>()
+    .json<GetAlunosWithTreinoResponse[]>()
 
   return result
 }
