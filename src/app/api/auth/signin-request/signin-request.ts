@@ -16,6 +16,11 @@ interface UserResponse {
   avatarUrl?: string
 }
 
+export interface SignInRequestResponse {
+  user: UserResponse
+  token: string
+}
+
 export async function signInRequest({ email, password }: LoginProps) {
   const userExists = await prisma.user.findUnique({
     where: {

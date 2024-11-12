@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { Card } from '@/components/ui/card'
 import type { Exercicio } from '@/http/get-treino'
 import { cn } from '@/lib/utils'
+import { orientacaoToPassos } from '@/utils/orientacao-passos'
 
 export interface ExercicioDetalhadoProps {
   exercicio: Exercicio
@@ -23,12 +24,7 @@ const roboto = Roboto({
 })
 
 export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
-  const passos = [
-    ...exercicio.exercicio.orientacao.matchAll(/(\d+)\.([\s\S]+?)(?=\d+\.|$)/g),
-  ].map((match) => ({
-    ordem: Number(match[1]),
-    orientacao: match[2].trim(),
-  }))
+  const passos = orientacaoToPassos(exercicio.exercicio.orientacao)
 
   const colSpanCarga = exercicio.isometria ? 'col-span-1' : 'col-span-2'
   const colSpanIsometria = exercicio.carga ? 'col-span-1' : 'col-span-2'

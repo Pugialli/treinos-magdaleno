@@ -20,16 +20,11 @@ interface TreinosListProps {
   alunoSlug: string
 }
 
-dayjs.extend(relativeTime) // carregar sob demanda
-
+dayjs.extend(relativeTime)
 dayjs.locale('pt-br')
 
 export async function TreinosList({ alunoSlug }: TreinosListProps) {
   const treinos = await getTreinos(alunoSlug)
-
-  // const alunos = null
-
-  // const authOrganization = organizationSchema.parse(organization)
 
   return (
     <div className="space-y-2">

@@ -1,76 +1,53 @@
 'use client'
 
-import { CircleX, ClipboardList, Dumbbell, Pencil, Plus } from 'lucide-react'
+import { CircleX, Pencil } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
-import { DeleteAlunoDialog } from '@/components/delete-aluno-dialog'
+import { DeleteExercicioDialog } from '@/components/delete-exercicio-dialog'
 import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import { TableCell, TableRow } from '@/components/ui/table'
-import type { GetAlunosResponse } from '@/http/get-alunos'
+import type { GetExercicioResponse } from '@/http/get-exercicios'
+import { orientacaoToPassos } from '@/utils/orientacao-passos'
 
-interface AlunosTableRowProps {
-  aluno: GetAlunosResponse
+interface ExerciciosTableRowProps {
+  exercicio: GetExercicioResponse
 }
 
-export function ExerciciosTablerow({ aluno }: AlunosTableRowProps) {
+export function ExerciciosTablerow({ exercicio }: ExerciciosTableRowProps) {
   const [open, setOpen] = useState(false)
 
-  const treinoId = aluno.treinos.length > 0 ? aluno.treinos[0].id : ''
+  const passos = orientacaoToPassos(exercicio.orientacao)
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen} key={aluno.id}>
+    <AlertDialog open={open} onOpenChange={setOpen} key={exercicio.id}>
       <TableRow>
         <TableCell className="py-2.5">
           <div className="flex flex-col">
-            <span className="inline-flex items-center gap-2">{aluno.nome}</span>
+            <span className="inline-flex items-center gap-2 text-nowrap">
+              {exercicio.nome}
+            </span>
           </div>
         </TableCell>
         <TableCell className="py-2.5">
           <div className="flex flex-col">
             <span className="inline-flex items-center gap-2">
-              {aluno.objetivo}
+              {exercicio.categoria}
+            </span>
+          </div>
+        </TableCell>
+        <TableCell className="py-2.5">
+          <div className="flex flex-col">
+            <span className="line-clamp-2">
+              {passos[0].ordem}. {passos[0].orientacao} [...]
             </span>
           </div>
         </TableCell>
         <TableCell className="py-2.5">
           <div className="flex items-center justify-end gap-2">
-            <Button
-              size="icon"
-              variant="outline"
-              disabled={treinoId === ''}
-              asChild={treinoId !== ''}
-            >
-              <Link href={`/aluno/${aluno.slug}/treino/${treinoId}`}>
-                <Dumbbell className="size-4" />
-              </Link>
-            </Button>
-
             <Button size="icon" variant="outline" asChild>
-              <Link href={`/aluno/${aluno.slug}`}>
-                <ClipboardList className="size-4" />
-              </Link>
-            </Button>
-
-            <Button size="icon" variant="outline" asChild>
-              <Link href={`/create-treino?aluno=${aluno.slug}`}>
-                <Plus className="size-4" />
-              </Link>
-            </Button>
-
-            {/* <form action={removeMemberAction.bind(null, member.id)}>
-                          <Button type="submit" size="sm" variant="destructive">
-                            <UserMinus className="mr-2 size-4" />
-                            Remove
-                          </Button>
-                        </form> */}
-          </div>
-        </TableCell>
-        <TableCell className="py-2.5">
-          <div className="flex items-center justify-end gap-2">
-            <Button size="icon" variant="outline" asChild>
-              <Link href={`/aluno/${aluno.slug}/edit`}>
+              <Link href={`/exercicios/${exercicio.id}/edit`}>
                 <Pencil className="size-4" />
               </Link>
             </Button>
@@ -91,7 +68,11 @@ export function ExerciciosTablerow({ aluno }: AlunosTableRowProps) {
         </TableCell>
       </TableRow>
 
-      <DeleteAlunoDialog id={aluno.id} nome={aluno.nome} openFn={setOpen} />
+      <DeleteExercicioDialog
+        id={exercicio.id}
+        nome={exercicio.nome}
+        openFn={setOpen}
+      />
     </AlertDialog>
   )
 }

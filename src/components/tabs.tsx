@@ -19,6 +19,14 @@ export async function Tabs() {
           size="sm"
           className="border border-transparent text-muted-foreground data-[current=true]:border-border data-[current=true]:text-foreground"
         >
+          <NavLink href={'/treinos'}>Treinos</NavLink>
+        </Button>
+        <Button
+          asChild
+          variant="ghost"
+          size="sm"
+          className="border border-transparent text-muted-foreground data-[current=true]:border-border data-[current=true]:text-foreground"
+        >
           <NavLink href={'/exercicios'}>Exercícios</NavLink>
         </Button>
       </nav>

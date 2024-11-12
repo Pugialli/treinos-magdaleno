@@ -10,7 +10,7 @@ export default async function Treino({
   params: Promise<{ slug: string; id: string }>
 }) {
   return (
-    <div>
+    <div className="w-[600px] justify-center">
       <Capa treinoId={(await params).id} alunoSlug={(await params).slug} />
       <Separator className="bg-black" />
       <Sobre />

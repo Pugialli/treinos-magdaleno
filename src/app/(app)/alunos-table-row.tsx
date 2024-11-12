@@ -91,7 +91,7 @@ export function AlunosTablerow({ aluno }: AlunosTableRowProps) {
         </TableCell>
       </TableRow>
 
-      <DeleteAlunoDialog id={aluno.id} nome={aluno.nome} openFn={setOpen} />
+      <DeleteAlunoDialog slug={aluno.slug} nome={aluno.nome} openFn={setOpen} />
     </AlertDialog>
   )
 }

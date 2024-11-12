@@ -1,15 +1,8 @@
 'use server'
 
-import { api } from './api-client'
+import type { GetAlunoResponse } from '@/app/api/alunos/[slug]/get-aluno'
 
-export interface GetAlunoResponse {
-  id: string
-  idProfessor: string
-  nome: string
-  slug: string
-  objetivo: string
-  createdAt: string
-}
+import { api } from './api-client'
 
 export async function getAluno(alunoSlug: string | null) {
   const result = alunoSlug

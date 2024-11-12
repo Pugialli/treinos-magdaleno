@@ -5,30 +5,31 @@ interface GetTreinoProps {
 }
 
 export interface GetTreinoResponse {
-  treino: {
+  id: string
+  createdAt: Date
+  aluno: {
     id: string
-    createdAt: Date
-    idAluno: string
-    exercicios: {
-      id: string
-      ordem: number
-      carga: string | null
-      repeticoes: number
-      series: number
-      descanso: string | null
-      isometria: string | null
-      obs: string | null
-      exercicio: {
-        nome: string
-        categoria: string
-        orientacao: string
-        fotos: {
-          id: string
-          avatarUrl: string
-        }[]
-      }
-    }[]
-  } | null
+    idProfessor: string
+  }
+  exercicios: {
+    id: string
+    ordem: number
+    carga: string | null
+    repeticoes: number
+    series: number
+    descanso: string | null
+    isometria: string | null
+    obs: string | null
+    exercicio: {
+      nome: string
+      categoria: string
+      orientacao: string
+      fotos: {
+        id: string
+        avatarUrl: string
+      }[]
+    }
+  }[]
 }
 
 export async function getTreino({ id }: GetTreinoProps) {
@@ -67,7 +68,12 @@ export async function getTreino({ id }: GetTreinoProps) {
           ordem: 'asc',
         },
       },
-      idAluno: true,
+      aluno: {
+        select: {
+          id: true,
+          idProfessor: true,
+        },
+      },
     },
     where: {
       id,

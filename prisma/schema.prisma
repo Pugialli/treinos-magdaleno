@@ -51,7 +51,7 @@ model Treino {
   createdAt  DateTime @default(now()) @map("created_at")
   modifiedAt DateTime @updatedAt @map("modified_at")
 
-  aluno      Aluno             @relation(fields: [idAluno], references: [id])
+  aluno      Aluno             @relation(fields: [idAluno], references: [id], onDelete: Cascade)
   exercicios ExercicioTreino[]
 
   @@map("treinos")
@@ -66,7 +66,7 @@ model Aluno {
   createdAt   DateTime @default(now()) @map("created_at")
 
   treinos   Treino[]
-  professor User     @relation(fields: [idProfessor], references: [id])
+  professor User     @relation(fields: [idProfessor], references: [id], onDelete: Cascade)
 
   @@map("alunos")
 }
@@ -83,8 +83,8 @@ model ExercicioTreino {
   isometria   String?
   obs         String?
 
-  exercicio Exercicio @relation(fields: [idExercicio], references: [id])
-  treino    Treino    @relation(fields: [idTreino], references: [id])
+  exercicio Exercicio @relation(fields: [idExercicio], references: [id], onDelete: Cascade)
+  treino    Treino    @relation(fields: [idTreino], references: [id], onDelete: Cascade)
 
   @@map("exercicios_treinos")
 }
@@ -99,7 +99,7 @@ model Exercicio {
   fotos            Foto[]
   exerciciosTreino ExercicioTreino[]
 
-  professor User @relation(fields: [idProfessor], references: [id])
+  professor User @relation(fields: [idProfessor], references: [id], onDelete: Cascade)
 
   @@map("exercicios")
 }
@@ -110,7 +110,7 @@ model Foto {
   avatarUrl   String
   ordem       Int
 
-  exercicio Exercicio @relation(fields: [idExercicio], references: [id])
+  exercicio Exercicio @relation(fields: [idExercicio], references: [id], onDelete: Cascade)
 
   @@map("fotos")
 }

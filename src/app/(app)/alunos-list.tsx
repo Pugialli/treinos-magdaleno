@@ -33,7 +33,7 @@ export async function AlunosList() {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={3}
+                  colSpan={4}
                   className="text-center text-muted-foreground"
                 >
                   Sem alunos cadastrados

@@ -18,7 +18,7 @@ export default function Exercicios() {
 
         <div className="space-y-4">
           <Button size="sm" variant="secondary" asChild>
-            <Link href={`/create-aluno`}>
+            <Link href={`/create-exercicio`}>
               <PlusCircle className="mr-2 size-4" />
               Novo exercício
             </Link>

@@ -1,13 +1,8 @@
 'use server'
 
-import { api } from './api-client'
+import type { GetProfessorResponse } from '@/app/api/professor/[id]/get-professor'
 
-interface GetProfessorResponse {
-  id: string
-  name: string
-  email: string
-  avatarUrl: string | null
-}
+import { api } from './api-client'
 
 export async function getProfessor(id: string) {
   const result = await api

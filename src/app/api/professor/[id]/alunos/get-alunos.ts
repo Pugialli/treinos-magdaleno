@@ -4,15 +4,6 @@ interface GetAlunosProps {
   idProfessor: string
 }
 
-// export interface GetAlunosResponse {
-//   id: string
-//   idProfessor: string
-//   slug: string
-//   nome: string
-//   objetivo: string
-//   createdAt: string
-// }
-
 export async function getAlunos({ idProfessor }: GetAlunosProps) {
   return await prisma.aluno.findMany({
     where: {

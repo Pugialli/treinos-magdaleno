@@ -2,13 +2,11 @@ import { NextResponse } from 'next/server'
 
 import { prisma } from '@/lib/prisma'
 
-export interface ProfileData {
-  user: {
-    id: string
-    name: string | null
-    email: string
-    avatarUrl: string | null
-  }
+export interface GetProfileResponse {
+  id: string
+  name: string | null
+  email: string
+  avatarUrl: string | null
 }
 
 interface GetProfileProps {

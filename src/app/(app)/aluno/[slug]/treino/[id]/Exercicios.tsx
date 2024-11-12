@@ -12,20 +12,16 @@ function agruparPorOrdem(exercicios: Exercicio[]) {
     const parteInteira = Math.floor(exercicio.ordem)
     const parteDecimal = exercicio.ordem % 1
 
-    // Calcula a nova ordem: mantém a parte inteira ou multiplica a parte decimal por 10
     const novaOrdem =
       parteDecimal === 0 ? parteInteira : Math.round(parteDecimal * 10)
 
-    // Verifica se já existe um grupo com a mesma parte inteira da ordem
     let grupo = agrupados.find((g) => Math.floor(g[0].ordem) === parteInteira)
 
-    // Se não existe, cria um novo grupo
     if (!grupo) {
       grupo = []
       agrupados.push(grupo)
     }
 
-    // Adiciona o exercício ao grupo, ajustando a ordem conforme necessário
     grupo.push({
       ...exercicio,
       ordem: novaOrdem,

@@ -1,7 +1,9 @@
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
+import { getTreinosFromProfessor } from '@/http/get-all-treinos'
 import { getAlunos } from '@/http/get-alunos'
+import { getExercicios } from '@/http/get-exercicios'
 import { getProfessor } from '@/http/get-professor'
 import { getProfile } from '@/http/get-profile'
 import { decrypt } from '@/utils/crypto'
@@ -30,6 +32,22 @@ export async function getCurrentAlunos() {
   if (!professor) return null
 
   return await getAlunos(professor.id)
+}
+
+export async function getCurrentExercicios() {
+  const professor = await loggedUser()
+
+  if (!professor) return null
+
+  return await getExercicios(professor.id)
+}
+
+export async function getCurrentTreinos() {
+  const professor = await loggedUser()
+
+  if (!professor) return null
+
+  return await getTreinosFromProfessor(professor.id)
 }
 
 export async function auth() {

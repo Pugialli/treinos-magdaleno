@@ -13,7 +13,7 @@ export async function createAluno({
   objetivo,
   idProfessor,
 }: CreateAlunoRequest): Promise<CreateAlunoResponse> {
-  await api.post('alunos', {
+  await api.post(`professor/${idProfessor}/alunos`, {
     json: {
       nome,
       objetivo,

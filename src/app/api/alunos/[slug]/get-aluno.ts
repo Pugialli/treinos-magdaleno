@@ -5,14 +5,12 @@ interface GetAlunoProps {
 }
 
 export interface GetAlunoResponse {
-  aluno: {
-    id: string
-    idProfessor: string
-    slug: string
-    nome: string
-    objetivo: string
-    createdAt: string
-  } | null
+  id: string
+  idProfessor: string
+  slug: string
+  nome: string
+  objetivo: string
+  createdAt: string
 }
 
 export async function getAluno({ slug }: GetAlunoProps) {

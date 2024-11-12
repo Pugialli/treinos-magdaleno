@@ -1,5 +1,7 @@
 import { type Dispatch, type SetStateAction, useState } from 'react'
 
+import { deleteAluno } from '@/http/delete-aluno'
+
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -11,28 +13,21 @@ import {
 } from './ui/alert-dialog'
 
 interface DeleteProps {
-  id: string
+  slug: string
   nome: string
   openFn: Dispatch<SetStateAction<boolean>>
 }
 
-export async function deleteAluno(id: string) {
-  // await new Promise((resolve) => setTimeout(resolve, Math.random() * 10000))
-
-  console.log(`deletar ${id}`)
-
-  // return await api.patch(`encontrista/${encontristaId}/delete`)
-}
-
-export function DeleteAlunoDialog({ id, nome, openFn }: DeleteProps) {
+export function DeleteAlunoDialog({ slug, nome, openFn }: DeleteProps) {
   const [isDeleting, setIsDeleting] = useState(false)
 
   async function handleDelete() {
     setIsDeleting(true)
-    await deleteAluno(id).then(() => {
+    await deleteAluno(slug).then(() => {
       setIsDeleting(false)
     })
   }
+
   return (
     <AlertDialogContent className="w-80">
       <AlertDialogHeader className="flex flex-col gap-2">

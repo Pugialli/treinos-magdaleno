@@ -1,12 +1,10 @@
+import type { SignInRequestResponse } from '@/app/api/auth/signin-request/signin-request'
+
 import { api } from './api-client'
 
 interface SignInWithPasswordRequest {
   email: string
   password: string
-}
-
-interface SignInWithPasswordResponse {
-  token: string
 }
 
 export async function signInWithPassword({
@@ -20,7 +18,7 @@ export async function signInWithPassword({
         password,
       },
     })
-    .json<SignInWithPasswordResponse>()
+    .json<SignInRequestResponse>()
 
   return result
 }

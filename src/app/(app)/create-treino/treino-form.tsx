@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { AlertTriangle, BadgeCheck, Loader2 } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 
+import type { GetTreinoResponse } from '@/app/api/treinos/[id]/get-treino'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -25,6 +26,8 @@ import { createTreinoAction } from './actions'
 
 interface TreinoFormProps {
   idProfessor: string
+  isUpdating?: boolean
+  initialData?: GetTreinoResponse
 }
 
 export function TreinoForm({ idProfessor }: TreinoFormProps) {
