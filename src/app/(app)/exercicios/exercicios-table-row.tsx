@@ -59,11 +59,11 @@ export function ExerciciosTablerow({ exercicio }: ExerciciosTableRowProps) {
             </AlertDialogTrigger>
 
             {/* <form action={removeMemberAction.bind(null, member.id)}>
-                          <Button type="submit" size="sm" variant="destructive">
-                            <UserMinus className="mr-2 size-4" />
-                            Remove
-                          </Button>
-                        </form> */}
+              <Button type="submit" size="sm" variant="destructive">
+                <UserMinus className="mr-2 size-4" />
+                Remove
+              </Button>
+            </form> */}
           </div>
         </TableCell>
       </TableRow>

@@ -7,13 +7,16 @@ interface GetTreinoProps {
 export interface ExercicioFromTreino {
   id: string
   ordem: number
-  carga: string | null
-  repeticoes: number
+  carga: number | null
+  repeticoes: number | null
   series: number
-  descanso: string | null
-  isometria: string | null
+  descansoMin: number | null
+  descansoSeg: number | null
+  isometriaMin: number | null
+  isometriaSeg: number | null
   obs: string | null
   exercicio: {
+    id: string
     nome: string
     categoria: string
     orientacao: string
@@ -43,14 +46,17 @@ export async function getTreino({ id }: GetTreinoProps) {
         select: {
           id: true,
           carga: true,
-          descanso: true,
-          isometria: true,
+          descansoMin: true,
+          descansoSeg: true,
+          isometriaMin: true,
+          isometriaSeg: true,
           ordem: true,
           obs: true,
           repeticoes: true,
           series: true,
           exercicio: {
             select: {
+              id: true,
               nome: true,
               categoria: true,
               orientacao: true,

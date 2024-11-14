@@ -1,55 +1,50 @@
 import { prisma } from '@/lib/prisma'
 
-export interface CreateTreinoProps {
-  alunoSlug: string
-  exercicios: {
-    id: string
-    ordem: number
-    carga: string
-    isometria?: string
-    repeticoes?: number
-    series: number
-    descanso?: string
-    obs?: string
-  }[]
+export interface CreateAndUpdateExerciciosTreino {
+  id?: string | undefined | null
+  idExercicio: string
+  ordem: number
+  carga?: number | undefined
+  repeticoes?: number | undefined
+  series: number
+  descansoMin?: number | undefined
+  descansoSeg?: number | undefined
+  isometriaMin?: number | undefined
+  isometriaSeg?: number | undefined
+  obs?: string | undefined
 }
 
-export async function createTreino({
-  alunoSlug,
-  exercicios,
-}: CreateTreinoProps) {
-  const aluno = await prisma.aluno.findUnique({
-    where: {
-      slug: alunoSlug,
-    },
-  })
+export interface CreateTreinoProps {
+  idAluno: string
+  exercicios: CreateAndUpdateExerciciosTreino[]
+}
 
-  if (!aluno) return null
-
+export async function createTreino({ idAluno, exercicios }: CreateTreinoProps) {
   const treino = await prisma.treino.create({
     data: {
-      idAluno: aluno.id,
+      idAluno,
     },
   })
 
   if (!treino) return null
 
-  const exerciciosTreino = exercicios.map(async (exercicio) => {
+  exercicios.map(async (exercicio) => {
     return await prisma.exercicioTreino.create({
       data: {
-        idExercicio: exercicio.id,
+        idExercicio: exercicio.idExercicio,
         idTreino: treino.id,
-
         ordem: exercicio.ordem,
-        carga: exercicio.carga,
-        isometria: exercicio.isometria,
-        repeticoes: exercicio.repeticoes,
         series: exercicio.series,
-        descanso: exercicio.descanso,
+        carga: exercicio.carga,
+        descansoMin: exercicio.descansoMin,
+        descansoSeg: exercicio.descansoSeg,
+        isometriaMin: exercicio.isometriaMin,
+        isometriaSeg: exercicio.isometriaSeg,
+        repeticoes: exercicio.repeticoes,
         obs: exercicio.obs,
       },
     })
   })
 
-  return { treino, exerciciosTreino }
+  return { treino }
 }

@@ -14,8 +14,8 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 - [x] ⁠visualizar todos seus alunos;
 
 ### Treino
-- [ ] ⁠criar um treino para um  dado aluno;
-- [ ] ⁠editar um treino de um  dado aluno;
+- [x] ⁠criar um treino para um  dado aluno;
+- [x] ⁠editar um treino de um  dado aluno;
 - [x] ⁠deletar um treino de um dado aluno;
 - [x] ⁠visualizar todos os treinos de um aluno;
 - [x] ⁠visualizar o último treino de um aluno;
@@ -38,3 +38,4 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 ## Pontos de correção antes do go-live
 ❌
 - Alterar o remove das listas adicionando as actions
+- Criar a opção de adicionar conjugados no treino

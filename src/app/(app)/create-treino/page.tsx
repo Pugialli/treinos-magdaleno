@@ -2,16 +2,18 @@ import { CircleChevronLeft } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
-import { loggedUser } from '@/auth/auth'
+import { getCurrentAlunos, getCurrentExercicios } from '@/auth/auth'
 import { Header } from '@/components/header'
 import { Button } from '@/components/ui/button'
 
 import { TreinoForm } from './treino-form'
 
 export default async function CreateTreino() {
-  const professor = await loggedUser()
+  const alunos = await getCurrentAlunos()
 
-  if (!professor) redirect('/')
+  const exercicios = await getCurrentExercicios()
+
+  if (!alunos || !exercicios) redirect('/')
 
   return (
     <>
@@ -26,7 +28,7 @@ export default async function CreateTreino() {
           </Link>
         </Button>
 
-        <TreinoForm idProfessor={professor.id} />
+        <TreinoForm alunos={alunos} exercicios={exercicios} />
       </div>
     </>
   )

@@ -72,16 +72,18 @@ model Aluno {
 }
 
 model ExercicioTreino {
-  id          String  @id @default(uuid())
-  idTreino    String  @map("id_treio")
-  idExercicio String  @map("id_exercicio")
-  ordem       Float
-  carga       String?
-  repeticoes  Int?
-  series      Int
-  descanso    String?
-  isometria   String?
-  obs         String?
+  id           String  @id @default(uuid())
+  idTreino     String  @map("id_treio")
+  idExercicio  String  @map("id_exercicio")
+  ordem        Float
+  carga        Int?
+  repeticoes   Int?
+  series       Int
+  descansoMin  Int?    @map("descanso_min")
+  descansoSeg  Int?    @map("descanso_seg")
+  isometriaMin Int?    @map("isometria_min")
+  isometriaSeg Int?    @map("isometria_seg")
+  obs          String?
 
   exercicio Exercicio @relation(fields: [idExercicio], references: [id], onDelete: Cascade)
   treino    Treino    @relation(fields: [idTreino], references: [id], onDelete: Cascade)

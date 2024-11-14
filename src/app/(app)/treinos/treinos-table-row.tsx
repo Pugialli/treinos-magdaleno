@@ -47,9 +47,7 @@ export function TreinosTablerow({ treino }: TreinosTableRowProps) {
         <TableCell className="py-2.5">
           <div className="flex items-center justify-end gap-2">
             <Button size="icon" variant="outline" asChild>
-              <Link
-                href={`/aluno/${treino.aluno.slug}/treino/${treino.id}/edit`}
-              >
+              <Link href={`/treinos/${treino.id}/edit`}>
                 <Pencil className="size-4" />
               </Link>
             </Button>

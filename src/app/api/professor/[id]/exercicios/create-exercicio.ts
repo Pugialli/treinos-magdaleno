@@ -13,12 +13,6 @@ export async function createExercicio({
   orientacao,
   idProfessor,
 }: CreateExercicioProps) {
-  console.log({
-    nome,
-    categoria,
-    orientacao,
-    idProfessor,
-  })
   return await prisma.exercicio.create({
     data: {
       nome,

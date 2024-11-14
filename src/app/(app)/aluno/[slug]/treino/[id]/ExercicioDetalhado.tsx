@@ -12,6 +12,7 @@ import type { ExercicioFromTreino } from '@/app/api/treinos/[id]/get-treino'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { orientacaoToPassos } from '@/utils/orientacao-passos'
+import { timeToString } from '@/utils/time-to-string'
 
 export interface ExercicioDetalhadoProps {
   exercicio: ExercicioFromTreino
@@ -26,7 +27,17 @@ const roboto = Roboto({
 export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
   const passos = orientacaoToPassos(exercicio.exercicio.orientacao)
 
-  const colSpanCarga = exercicio.isometria ? 'col-span-1' : 'col-span-2'
+  const isometria = timeToString({
+    min: exercicio.isometriaMin,
+    sec: exercicio.isometriaSeg,
+  })
+
+  const descanso = timeToString({
+    min: exercicio.descansoMin,
+    sec: exercicio.descansoSeg,
+  })
+
+  const colSpanCarga = isometria !== '0s' ? 'col-span-1' : 'col-span-2'
   const colSpanIsometria = exercicio.carga ? 'col-span-1' : 'col-span-2'
   const colSpanSerie = exercicio.repeticoes ? 'col-span-1' : 'col-span-2'
 
@@ -36,7 +47,7 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
         {exercicio.exercicio.nome}
       </span>
       <div className="grid grid-cols-2 gap-2">
-        {exercicio.carga && (
+        {exercicio.carga !== 0 && (
           <Card
             className={cn(
               colSpanCarga,
@@ -45,11 +56,11 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
           >
             <Dumbbell className="mr-2 size-4" />
             <p className="text-lg">
-              Carga: <span className="font-bold">{exercicio.carga}</span>
+              Carga: <span className="font-bold">{exercicio.carga} kgs</span>
             </p>
           </Card>
         )}
-        {exercicio.isometria && (
+        {isometria !== '0s' && (
           <Card
             className={cn(
               colSpanIsometria,
@@ -58,8 +69,7 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
           >
             <Clock4 className="mr-2 size-4" />
             <p className="text-lg">
-              Isometria:{' '}
-              <span className="font-bold">{exercicio.isometria}</span>
+              Isometria: <span className="font-bold">{isometria}</span>
             </p>
           </Card>
         )}
@@ -102,12 +112,12 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
           })}
         </div>
       </div>
-      {exercicio.descanso && (
+      {descanso !== '0s' && (
         <Card className="col-span-1 flex w-full items-center justify-center border-0 bg-primary/10 py-2">
           <CircleAlert className="mr-2 size-4" />
           <p className="text-lg">
-            Descanse <span className="font-bold">{exercicio.descanso}</span>{' '}
-            entre as séries.
+            Descanse <span className="font-bold">{descanso}</span> entre as
+            séries.
           </p>
         </Card>
       )}

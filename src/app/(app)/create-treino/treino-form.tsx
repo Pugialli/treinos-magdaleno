@@ -3,8 +3,15 @@
 import { useQuery } from '@tanstack/react-query'
 import { AlertTriangle, BadgeCheck, Loader2 } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-import type { GetTreinoResponse } from '@/app/api/treinos/[id]/get-treino'
+import { ExercicioTreinoInput } from '@/app/(app)/create-treino/exercicio-treino-input'
+import type { GetExercicioResponse } from '@/app/api/exercicios/[id]/get-exercicio'
+import type { GetAlunosWithTreinoResponse } from '@/app/api/professor/[id]/alunos/get-alunos'
+import type {
+  ExercicioFromTreino,
+  GetTreinoResponse,
+} from '@/app/api/treinos/[id]/get-treino'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
@@ -16,23 +23,45 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Textarea } from '@/components/ui/textarea'
 import { useFormState } from '@/hooks/use-form-state'
 import { getAluno } from '@/http/get-aluno'
-import { getAlunos } from '@/http/get-alunos'
-import { queryClient } from '@/lib/react-query'
 
-import { createTreinoAction } from './actions'
+import { createTreinoAction, updateTreinoAction } from './actions'
 
 interface TreinoFormProps {
-  idProfessor: string
+  alunos: GetAlunosWithTreinoResponse[]
+  exercicios: GetExercicioResponse[]
   isUpdating?: boolean
   initialData?: GetTreinoResponse
 }
 
-export function TreinoForm({ idProfessor }: TreinoFormProps) {
-  const searchParams = useSearchParams()
+const baseExercicioTreino: ExercicioFromTreino = {
+  id: '',
+  ordem: 1,
+  carga: null,
+  repeticoes: null,
+  series: 1,
+  descansoMin: null,
+  descansoSeg: null,
+  isometriaMin: null,
+  isometriaSeg: null,
+  obs: null,
+  exercicio: {
+    id: '',
+    nome: '',
+    categoria: '',
+    orientacao: '',
+    fotos: [],
+  },
+}
 
+export function TreinoForm({
+  alunos,
+  exercicios,
+  isUpdating = false,
+  initialData,
+}: TreinoFormProps) {
+  const searchParams = useSearchParams()
   const alunoSlug = searchParams.get('aluno')
 
   const { data: currentAluno } = useQuery({
@@ -41,26 +70,47 @@ export function TreinoForm({ idProfessor }: TreinoFormProps) {
     enabled: !!alunoSlug,
   })
 
-  const { data: alunos } = useQuery({
-    queryKey: ['alunos', currentAluno?.idProfessor],
-    queryFn: () => getAlunos(idProfessor),
-  })
+  const formAction = isUpdating ? updateTreinoAction : createTreinoAction
 
-  const [{ success, message, errors }, handleSubmit, isPending] = useFormState(
-    createTreinoAction,
-    () => {
-      queryClient.invalidateQueries({
-        queryKey: [alunoSlug, 'treinos'],
-      })
-    },
+  const initialSteps: ExercicioFromTreino[] = initialData
+    ? initialData.exercicios
+    : [baseExercicioTreino]
+
+  const [exerciciosTreino, setExerciciosTreino] = useState(initialSteps)
+
+  const [{ success, message, errors }, handleSubmit, isPending] =
+    useFormState(formAction)
+
+  const [idAluno, setIdAluno] = useState<string | undefined>(
+    initialData ? initialData.aluno.id : undefined,
   )
 
-  // const currentProject =
-  //   data && projectSlug
-  //     ? data.projects.find((project) => project.slug === projectSlug)
-  //     : null
+  useEffect(() => {
+    if (currentAluno) {
+      setIdAluno(currentAluno.id)
+    }
+  }, [currentAluno])
 
-  const defaultAluno = currentAluno ? currentAluno.id : ''
+  function addExercicio() {
+    const ordemExercicio = exerciciosTreino.length + 1
+    setExerciciosTreino((prevExerciciosTreino) => [
+      ...prevExerciciosTreino,
+      {
+        ...baseExercicioTreino,
+        ordem: ordemExercicio,
+      },
+    ])
+  }
+
+  function removeExercicio() {
+    setExerciciosTreino((prevExerciciosTreino) =>
+      prevExerciciosTreino.slice(0, -1),
+    )
+  }
+
+  function handleChangeAluno(value: string) {
+    setIdAluno(value)
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -83,43 +133,63 @@ export function TreinoForm({ idProfessor }: TreinoFormProps) {
           </AlertDescription>
         </Alert>
       )}
+
+      <input
+        type="hidden"
+        name="idTreino"
+        value={initialData ? initialData.id : undefined}
+      />
+
       <div className="space-y-1">
-        <Label htmlFor="aluno">Aluno</Label>
-        {alunos ? (
-          <Select name="aluno" defaultValue={defaultAluno}>
-            <SelectTrigger>
+        <Label htmlFor="idAluno">Aluno</Label>
+        <input type="hidden" name="idAluno" defaultValue={idAluno} />
+        {alunoSlug === null || currentAluno ? (
+          <Select
+            defaultValue={currentAluno ? currentAluno.id : idAluno}
+            onValueChange={handleChangeAluno}
+          >
+            <SelectTrigger id="idAluno">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {alunos &&
-                alunos.map((aluno) => {
-                  return (
-                    <SelectItem key={aluno.id} value={aluno.id}>
-                      {aluno.nome}
-                    </SelectItem>
-                  )
-                })}
+              {alunos.map((aluno) => {
+                return (
+                  <SelectItem key={aluno.id} value={aluno.id}>
+                    {aluno.nome}
+                  </SelectItem>
+                )
+              })}
             </SelectContent>
           </Select>
         ) : (
           <Skeleton className="h-10 w-full" />
         )}
-        {errors?.name && (
+
+        {errors?.idAluno && (
           <p className="text-xs font-medium text-red-500 dark:text-red-400">
-            {errors.name[0]}
+            {errors.idAluno[0]}
           </p>
         )}
       </div>
 
       <div className="space-y-1">
-        <Label htmlFor="description">Description</Label>
-        <Textarea name="description" id="description" />
+        <div>Exercícios</div>
 
-        {errors?.description && (
-          <p className="text-xs font-medium text-red-500 dark:text-red-400">
-            {errors.description[0]}
-          </p>
-        )}
+        <div className="space-y-2">
+          {exerciciosTreino.map((exercicioTreino, index) => {
+            return (
+              <ExercicioTreinoInput
+                key={index}
+                exercicios={exercicios}
+                exercicioTreino={exercicioTreino}
+                errors={errors}
+                addExercicio={addExercicio}
+                removeExercicio={removeExercicio}
+                index={index}
+              />
+            )
+          })}
+        </div>
       </div>
 
       <Button className="w-full" type="submit" disabled={isPending}>
