@@ -19,13 +19,14 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 - [x] ⁠deletar um treino de um dado aluno;
 - [x] ⁠visualizar todos os treinos de um aluno;
 - [x] ⁠visualizar o último treino de um aluno;
+- [x] ⁠duplicar um treino de um aluno para outro ou para o mesmo;
 - [ ] ⁠trocar a ordem dos exercícios de um treino;
 - [ ] ⁠gerar um pdf com o treino;
-- [ ] ⁠duplicar um treino de um aluno para outro ou para o mesmo;
 
 ### Exercícios
 - [x] ⁠cadastrar um novo exercício;
 - [x] ⁠editar seus exercícios;
+- [x] reordenar as orientações em um exercício;
 - [x] deletar um de seus exercícios;
 - [x] ⁠visualizar todos os exercícios cadastrados;
 - [ ] ⁠filtrar os exercícios por tipo;
@@ -37,5 +38,3 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 
 ## Pontos de correção antes do go-live
 ❌
-- Alterar o remove das listas adicionando as actions
-- Criar a opção de adicionar conjugados no treino

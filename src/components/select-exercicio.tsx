@@ -1,7 +1,7 @@
 'use client'
 
 import { Check, ChevronsUpDown } from 'lucide-react'
-import { type Dispatch, type SetStateAction, useState } from 'react'
+import { type Dispatch, type SetStateAction, useEffect, useState } from 'react'
 
 import type { GetExercicioResponse } from '@/app/api/exercicios/[id]/get-exercicio'
 import { Button } from '@/components/ui/button'
@@ -36,6 +36,12 @@ export function SelectExercicio({
 
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState(initialValue)
+
+  useEffect(() => {
+    if (initialData) {
+      setValue(initialData)
+    }
+  }, [initialData])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

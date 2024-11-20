@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { Header } from '@/components/header'
 import { Button } from '@/components/ui/button'
 import { getAluno } from '@/http/get-aluno'
+import { getTreinos } from '@/http/get-treinos'
 
 import { TreinosList } from './treinos-list'
 
@@ -15,9 +16,9 @@ export default async function Aluno({
 }) {
   const aluno = await getAluno((await params).slug)
 
-  const currentSlug = aluno ? aluno.slug : null
-
   if (!aluno) redirect('/')
+
+  const treinos = await getTreinos(aluno.slug)
 
   return (
     <>
@@ -34,13 +35,13 @@ export default async function Aluno({
               </Link>
             </Button>
             <Button size="sm" variant="secondary" asChild>
-              <Link href={`/create-treino?aluno=${currentSlug}`}>
+              <Link href={`/create-treino?aluno=${aluno.slug}`}>
                 <PlusCircle className="mr-2 size-4" />
                 Novo treino
               </Link>
             </Button>
           </div>
-          {currentSlug && <TreinosList alunoSlug={currentSlug} />}
+          {aluno && <TreinosList treinos={treinos} />}
         </div>
       </div>
     </>

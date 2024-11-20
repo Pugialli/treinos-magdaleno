@@ -1,4 +1,9 @@
-import { CircleMinus, CirclePlus } from 'lucide-react'
+import {
+  CircleChevronDown,
+  CircleChevronUp,
+  CircleMinus,
+  CirclePlus,
+} from 'lucide-react'
 import { useState } from 'react'
 
 import type { GetExercicioResponse } from '@/app/api/exercicios/[id]/get-exercicio'
@@ -13,22 +18,41 @@ import { Label } from '@/components/ui/label'
 export interface ExercicioTreinoInputProps {
   exercicios: GetExercicioResponse[]
   exercicioTreino: ExercicioFromTreino
-  index: number
+  indexExercicio: number
+  indexConjugado: number
   errors: Record<string, string[]> | null
   addExercicio: () => void
-  removeExercicio: () => void
+  addExercicioToConjugado: (conjugadoIndex: number) => void
+  addConjugado: () => void
+  removeExercicio: (conjugadoIndex: number, exercicioIndex: number) => void
+  moveConjugadoUp: (conjugadoIndex: number) => void
+  moveConjugadoDown: (conjugadoIndex: number) => void
+  moveExerciseUp: (conjugadoIndex: number, exercicioIndex: number) => void
+  moveExerciseDown: (conjugadoIndex: number, exercicioIndex: number) => void
+  isConjugado?: boolean
+  isLast: boolean
 }
 
 export function ExercicioTreinoInput({
   exercicios,
   exercicioTreino,
-  index,
+  indexExercicio,
+  indexConjugado,
   errors,
+  isLast,
   addExercicio,
+  addExercicioToConjugado,
+  addConjugado,
   removeExercicio,
+  moveExerciseUp,
+  moveExerciseDown,
+  moveConjugadoUp,
+  moveConjugadoDown,
+  isConjugado = false,
 }: ExercicioTreinoInputProps) {
   const initialData = {
     id: exercicioTreino.id || '',
+    nome: exercicioTreino.exercicio.nome || '',
     idExercicio: exercicioTreino.exercicio.id || '',
     carga: exercicioTreino.carga,
     isometriaMin: exercicioTreino.isometriaMin,
@@ -42,36 +66,75 @@ export function ExercicioTreinoInput({
 
   const [idExercicio, setIdExercicio] = useState(initialData.idExercicio)
 
+  const ordem = isConjugado
+    ? `${indexConjugado + 1}.${indexExercicio + 1}`
+    : `${indexConjugado + 1}`
+
   return (
     <Card className="space-y-4 p-4">
       <CardTitle className="flex items-start gap-4">
-        <Input
+        <input
           type="hidden"
-          name={`exercicios[${index}].id`}
+          name={`exercicios[${indexConjugado}][${indexExercicio}].id`}
           defaultValue={exercicioTreino.id}
         />
 
-        <Input
-          type="hidden"
-          name={`exercicios[${index}].ordem`}
-          defaultValue={exercicioTreino.ordem}
-        />
-        <span>{exercicioTreino.ordem}.</span>
+        <div>
+          <span>{ordem}.</span>
+          <div className="flex gap-1">
+            <Button
+              variant="link"
+              size="xs"
+              onClick={
+                isConjugado
+                  ? () => moveExerciseUp(indexConjugado, indexExercicio)
+                  : () => moveConjugadoUp(indexConjugado)
+              }
+              type="button"
+              className="px-0"
+              disabled={
+                isConjugado ? indexExercicio === 0 : indexConjugado === 0
+              }
+            >
+              <CircleChevronUp className="size-4" />
+            </Button>
+            <Button
+              variant="link"
+              size="xs"
+              onClick={
+                isConjugado
+                  ? () => moveExerciseDown(indexConjugado, indexExercicio)
+                  : () => moveConjugadoDown(indexConjugado)
+              }
+              type="button"
+              className="px-0"
+              disabled={isLast}
+            >
+              <CircleChevronDown className="size-4" />
+            </Button>
+          </div>
+        </div>
         <div className="w-full space-y-1">
           <Input
             type="hidden"
-            name={`exercicios[${index}].idExercicio`}
+            name={`exercicios[${indexConjugado}][${indexExercicio}].idExercicio`}
             defaultValue={idExercicio}
           />
 
           <SelectExercicio
             exercicios={exercicios}
             setIdExercicio={setIdExercicio}
-            initialData={exercicioTreino.exercicio.nome}
+            initialData={initialData.nome}
           />
-          {errors?.[`exercicios[${index}].idExercicio`] && (
+          {errors?.[
+            `exercicios[${indexConjugado}][${indexExercicio}].idExercicio`
+          ] && (
             <p className="text-xs font-medium text-red-500 dark:text-red-400">
-              {errors[`exercicios[${index}].idExercicio`]}
+              {
+                errors[
+                  `exercicios[${indexConjugado}][${indexExercicio}].idExercicio`
+                ]
+              }
             </p>
           )}
         </div>
@@ -79,43 +142,46 @@ export function ExercicioTreinoInput({
       <div className="space-y-4">
         <div className="flex justify-between gap-4">
           <div className="space-y-1">
-            <Label htmlFor={`${index}.carga`}>Carga</Label>
+            <Label htmlFor={`${indexConjugado}.carga`}>Carga</Label>
             <InputWithLabel
               type="number"
-              name={`exercicios[${index}].carga`}
+              id={`${indexConjugado}.carga`}
+              name={`exercicios[${indexConjugado}][${indexExercicio}].carga`}
               defaultValue={initialData.carga || undefined}
               label="kgs"
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor={`${index}.isometriaMin`}>Isometria</Label>
+            <Label htmlFor={`${indexConjugado}.isometriaMin`}>Isometria</Label>
             <div className="flex gap-1">
               <InputWithLabel
                 type="number"
-                name={`exercicios[${index}].isometriaMin`}
+                id={`${indexConjugado}.isometriaMin`}
+                name={`exercicios[${indexConjugado}][${indexExercicio}].isometriaMin`}
                 defaultValue={initialData.isometriaMin || undefined}
                 label="m"
               />
               <InputWithLabel
                 type="number"
-                name={`exercicios[${index}].isometriaSeg`}
+                name={`exercicios[${indexConjugado}][${indexExercicio}].isometriaSeg`}
                 defaultValue={initialData.isometriaSeg || undefined}
                 label="s"
               />
             </div>
           </div>
           <div className="space-y-1">
-            <Label htmlFor={`${index}.descansoMin`}>Descanso</Label>
+            <Label htmlFor={`${indexConjugado}.descansoMin`}>Descanso</Label>
             <div className="flex gap-1">
               <InputWithLabel
                 type="number"
-                name={`exercicios[${index}].descansoMin`}
+                id={`${indexConjugado}.descansoMin`}
+                name={`exercicios[${indexConjugado}][${indexExercicio}].descansoMin`}
                 defaultValue={initialData.descansoMin || undefined}
                 label="m"
               />
               <InputWithLabel
                 type="number"
-                name={`exercicios[${index}].descansoSeg`}
+                name={`exercicios[${indexConjugado}][${indexExercicio}].descansoSeg`}
                 defaultValue={initialData.descansoSeg || undefined}
                 label="s"
               />
@@ -124,38 +190,44 @@ export function ExercicioTreinoInput({
         </div>
         <div className="flex justify-between gap-4">
           <div className="space-y-1">
-            <Label htmlFor={`${index}.repeticoes`}>Repetições</Label>
+            <Label htmlFor={`${indexConjugado}.repeticoes`}>Repetições</Label>
             <Input
               type="number"
-              name={`exercicios[${index}].repeticoes`}
-              id={`${index}.repeticoes`}
+              id={`${indexConjugado}.repeticoes`}
+              name={`exercicios[${indexConjugado}][${indexExercicio}].repeticoes`}
               defaultValue={initialData.repeticoes || undefined}
             />
           </div>
 
           <div className="space-y-1">
-            <Label htmlFor={`${index}.series`}>Séries</Label>
+            <Label htmlFor={`${indexConjugado}.series`}>Séries</Label>
             <Input
               type="number"
-              name={`exercicios[${index}].series`}
-              id={`${index}.series`}
+              id={`${indexConjugado}.series`}
+              name={`exercicios[${indexConjugado}][${indexExercicio}].series`}
               defaultValue={initialData.series}
             />
-            {errors?.[`exercicios[${index}].series`] && (
+            {errors?.[
+              `exercicios[${indexConjugado}][${indexExercicio}].series`
+            ] && (
               <p className="text-xs font-medium text-red-500 dark:text-red-400">
-                {errors[`exercicios[${index}].series`][0]}
+                {
+                  errors[
+                    `exercicios[${indexConjugado}][${indexExercicio}].series`
+                  ][0]
+                }
               </p>
             )}
           </div>
         </div>
         <div className="flex items-end gap-4">
           <div className="w-full space-y-1">
-            <Label htmlFor={`${index}.obs`}>
+            <Label htmlFor={`${indexConjugado}.obs`}>
               Observações para esse exercício
             </Label>
             <Input
-              id={`${index}.obs`}
-              name={`exercicios[${index}].obs`}
+              id={`${indexConjugado}.obs`}
+              name={`exercicios[${indexConjugado}][${indexExercicio}].obs`}
               defaultValue={initialData.obs}
             />
           </div>
@@ -165,29 +237,33 @@ export function ExercicioTreinoInput({
             <Button
               variant="default"
               size="xs"
-              onClick={addExercicio}
+              onClick={
+                isConjugado
+                  ? () => addExercicioToConjugado(indexConjugado)
+                  : () => addExercicio()
+              }
               type="button"
             >
-              <CirclePlus className="size-4" /> Adicionar exercício
+              <CirclePlus className="size-4" /> Exercício
             </Button>
-            {index !== 0 && (
+            {indexConjugado !== 0 && (
               <Button
                 variant="destructive"
                 size="xs"
-                onClick={removeExercicio}
+                onClick={() => removeExercicio(indexConjugado, indexExercicio)}
                 type="button"
-                disabled={index === 0}
+                disabled={indexConjugado === 0}
               >
-                <CircleMinus className="size-4" /> Remover exercício
+                <CircleMinus className="size-4" /> Exercício
               </Button>
             )}
             <Button
               variant="secondary"
               size="xs"
-              onClick={addExercicio}
+              onClick={addConjugado}
               type="button"
             >
-              <CirclePlus className="size-4" /> Adicionar conjunto
+              <CirclePlus className="size-4" /> Conjugado
             </Button>
           </div>
         </div>

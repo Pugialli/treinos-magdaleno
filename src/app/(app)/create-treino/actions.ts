@@ -1,8 +1,10 @@
 'use server'
 
 import { HTTPError } from 'ky'
+import { revalidateTag } from 'next/cache'
 import { z } from 'zod'
 
+import type { ExercicioFromTreino } from '@/app/api/treinos/[id]/get-treino'
 import { createTreino } from '@/http/create-treino'
 import { updateTreino } from '@/http/update-treino'
 
@@ -31,6 +33,24 @@ const treinoSchema = z.object({
     }),
   ),
 })
+
+function flattenExerciciosTreino(
+  conjugados: ExercicioFromTreino[][],
+): ExercicioFromTreino[] {
+  const flattened: ExercicioFromTreino[] = []
+
+  conjugados.forEach((conjugado, conjugadoIndex) => {
+    conjugado.forEach((exercicio, exercicioIndex) => {
+      // Calcula a ordem com base no índice do conjugado e do exercício
+      const ordem = conjugadoIndex + 1 + exercicioIndex / 10
+
+      // Cria uma cópia do exercício com a nova ordem
+      flattened.push({ ...exercicio, ordem })
+    })
+  })
+
+  return flattened
+}
 
 function transformFormData(formData: FormData): Record<string, unknown> {
   const result: Record<string, unknown> = {}
@@ -62,6 +82,13 @@ function transformFormData(formData: FormData): Record<string, unknown> {
     })
   }
 
+  // Ajusta o campo "exercicios" para ser um array plano
+  if (Array.isArray(result.exercicios)) {
+    result.exercicios = flattenExerciciosTreino(
+      result.exercicios as ExercicioFromTreino[][],
+    )
+  }
+
   return result
 }
 
@@ -77,10 +104,13 @@ export async function createTreinoAction(data: FormData) {
   const { idAluno, exercicios } = result.data
 
   try {
-    await createTreino({
+    const treino = await createTreino({
       idAluno,
       exercicios,
     })
+
+    revalidateTag(`${treino.aluno.idProfessor}/treinos`)
+    revalidateTag(`treinos/${treino.aluno.slug}`)
   } catch (err) {
     if (err instanceof HTTPError) {
       const { message } = await err.response.json()
@@ -116,10 +146,14 @@ export async function updateTreinoAction(data: FormData) {
 
   try {
     if (idTreino) {
-      await updateTreino({
+      const treino = await updateTreino({
         idTreino,
         exercicios,
       })
+
+      revalidateTag(`${treino.aluno.idProfessor}/treinos`)
+      revalidateTag(`treinos/${treino.aluno.slug}`)
+      revalidateTag(`treino/${treino.id}`)
     }
   } catch (err) {
     if (err instanceof HTTPError) {

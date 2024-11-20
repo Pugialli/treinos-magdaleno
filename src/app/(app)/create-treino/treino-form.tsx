@@ -25,8 +25,11 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useFormState } from '@/hooks/use-form-state'
 import { getAluno } from '@/http/get-aluno'
+import { swapConjugado, swapExercicioInConjugado } from '@/utils/switch-array'
+import { groupByOrder } from '@/utils/transform-conjugado'
 
 import { createTreinoAction, updateTreinoAction } from './actions'
+import { ConjugadoTreinoInput } from './conjugado-treino-input'
 
 interface TreinoFormProps {
   alunos: GetAlunosWithTreinoResponse[]
@@ -72,9 +75,9 @@ export function TreinoForm({
 
   const formAction = isUpdating ? updateTreinoAction : createTreinoAction
 
-  const initialSteps: ExercicioFromTreino[] = initialData
-    ? initialData.exercicios
-    : [baseExercicioTreino]
+  const initialSteps: ExercicioFromTreino[][] = initialData
+    ? groupByOrder(initialData.exercicios)
+    : [[baseExercicioTreino]]
 
   const [exerciciosTreino, setExerciciosTreino] = useState(initialSteps)
 
@@ -92,20 +95,96 @@ export function TreinoForm({
   }, [currentAluno])
 
   function addExercicio() {
-    const ordemExercicio = exerciciosTreino.length + 1
     setExerciciosTreino((prevExerciciosTreino) => [
       ...prevExerciciosTreino,
-      {
-        ...baseExercicioTreino,
-        ordem: ordemExercicio,
-      },
+      [{ ...baseExercicioTreino, ordem: prevExerciciosTreino.length + 1 }],
     ])
   }
 
-  function removeExercicio() {
+  function addConjugado() {
+    setExerciciosTreino((prevExerciciosTreino) => [
+      ...prevExerciciosTreino,
+      [
+        { ...baseExercicioTreino, ordem: prevExerciciosTreino.length + 1 },
+        { ...baseExercicioTreino, ordem: prevExerciciosTreino.length + 1.1 },
+      ],
+    ])
+  }
+
+  function addExercicioToConjugado(conjugadoIndex: number) {
+    setExerciciosTreino((prevExerciciosTreino) => {
+      const updated = [...prevExerciciosTreino]
+      const lastOrder = updated[conjugadoIndex].length
+      const newExercicio = { ...baseExercicioTreino, ordem: lastOrder + 1 }
+
+      updated[conjugadoIndex] = [...updated[conjugadoIndex], newExercicio]
+      return updated
+    })
+  }
+
+  function removeExercicio(conjugadoIndex: number, exercicioIndex: number) {
+    setExerciciosTreino((prevExerciciosTreino) => {
+      const updated = [...prevExerciciosTreino]
+      updated[conjugadoIndex] = updated[conjugadoIndex].filter(
+        (_, index) => index !== exercicioIndex,
+      )
+
+      if (updated[conjugadoIndex].length === 0) {
+        updated.splice(conjugadoIndex, 1)
+      }
+
+      return updated
+    })
+  }
+
+  function removeConjugado(conjugadoIndex: number) {
     setExerciciosTreino((prevExerciciosTreino) =>
-      prevExerciciosTreino.slice(0, -1),
+      prevExerciciosTreino.filter((_, index) => index !== conjugadoIndex),
     )
+  }
+
+  function subirExercicioNoConjugado(
+    conjugadoIndex: number,
+    exercicioIndex: number,
+  ) {
+    const updated = swapExercicioInConjugado(
+      exerciciosTreino,
+      exercicioIndex - 1,
+      exercicioIndex,
+      conjugadoIndex,
+    )
+    setExerciciosTreino(updated)
+  }
+
+  function descerExercicioNoConjugado(
+    conjugadoIndex: number,
+    exercicioIndex: number,
+  ) {
+    const updated = swapExercicioInConjugado(
+      exerciciosTreino,
+      exercicioIndex,
+      exercicioIndex + 1,
+      conjugadoIndex,
+    )
+    setExerciciosTreino(updated)
+  }
+
+  function subirConjugado(conjugadoIndex: number) {
+    const updated = swapConjugado(
+      exerciciosTreino,
+      conjugadoIndex,
+      conjugadoIndex - 1,
+    )
+    setExerciciosTreino(updated)
+  }
+
+  function descerConjugado(conjugadoIndex: number) {
+    const updated = swapConjugado(
+      exerciciosTreino,
+      conjugadoIndex,
+      conjugadoIndex + 1,
+    )
+    setExerciciosTreino(updated)
   }
 
   function handleChangeAluno(value: string) {
@@ -176,18 +255,68 @@ export function TreinoForm({
         <div>Exercícios</div>
 
         <div className="space-y-2">
-          {exerciciosTreino.map((exercicioTreino, index) => {
-            return (
-              <ExercicioTreinoInput
-                key={index}
-                exercicios={exercicios}
-                exercicioTreino={exercicioTreino}
-                errors={errors}
-                addExercicio={addExercicio}
-                removeExercicio={removeExercicio}
-                index={index}
-              />
-            )
+          {exerciciosTreino.map((exercicioTreinoConjugado, indexConjugado) => {
+            if (exercicioTreinoConjugado.length > 1) {
+              return (
+                <ConjugadoTreinoInput
+                  key={indexConjugado}
+                  index={indexConjugado}
+                  isLast={exerciciosTreino.length - 1 === indexConjugado}
+                  addExercicio={addExercicio}
+                  removeConjugado={removeConjugado}
+                  moveConjugadoUp={subirConjugado}
+                  moveConjugadoDown={descerConjugado}
+                >
+                  {exercicioTreinoConjugado.map(
+                    (exercicioTreino, indexExercicio) => {
+                      return (
+                        <ExercicioTreinoInput
+                          key={indexExercicio}
+                          indexExercicio={indexExercicio}
+                          indexConjugado={indexConjugado}
+                          exercicios={exercicios}
+                          exercicioTreino={exercicioTreino}
+                          isLast={
+                            exercicioTreinoConjugado.length - 1 ===
+                            indexExercicio
+                          }
+                          errors={errors}
+                          addConjugado={addConjugado}
+                          addExercicio={addExercicio}
+                          addExercicioToConjugado={addExercicioToConjugado}
+                          removeExercicio={removeExercicio}
+                          moveConjugadoUp={subirConjugado}
+                          moveConjugadoDown={descerConjugado}
+                          moveExerciseUp={subirExercicioNoConjugado}
+                          moveExerciseDown={descerExercicioNoConjugado}
+                          isConjugado
+                        />
+                      )
+                    },
+                  )}
+                </ConjugadoTreinoInput>
+              )
+            } else {
+              return (
+                <ExercicioTreinoInput
+                  key={indexConjugado}
+                  indexExercicio={0}
+                  indexConjugado={indexConjugado}
+                  exercicios={exercicios}
+                  exercicioTreino={exercicioTreinoConjugado[0]}
+                  isLast={exerciciosTreino.length - 1 === indexConjugado}
+                  errors={errors}
+                  addConjugado={addConjugado}
+                  addExercicio={addExercicio}
+                  addExercicioToConjugado={addExercicioToConjugado}
+                  removeExercicio={removeExercicio}
+                  moveConjugadoUp={subirConjugado}
+                  moveConjugadoDown={descerConjugado}
+                  moveExerciseUp={subirExercicioNoConjugado}
+                  moveExerciseDown={descerExercicioNoConjugado}
+                />
+              )
+            }
           })}
         </div>
       </div>

@@ -1,11 +1,13 @@
 export interface Passo {
+  id: string
   ordem: number
   orientacao: string
 }
 
-export function orientacaoToPassos(orientacao: string) {
+export function orientacaoToPassos(orientacao: string): Passo[] {
   return [...orientacao.matchAll(/(\d+)\.([\s\S]+?)(?=\d+\.|$)/g)].map(
     (match) => ({
+      id: crypto.randomUUID(),
       ordem: Number(match[1]),
       orientacao: match[2].trim(),
     }),

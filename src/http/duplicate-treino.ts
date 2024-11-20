@@ -1,3 +1,5 @@
+import type { GetTreinoResponse } from '@/app/api/treinos/[id]/get-treino'
+
 import { api } from './api-client'
 
 interface DuplicateTreinoRequest {
@@ -5,16 +7,18 @@ interface DuplicateTreinoRequest {
   idAluno: string
 }
 
-type DuplicateTreinoResponse = void
+type DuplicateTreinoResponse = GetTreinoResponse
 
 export async function duplicateTreino({
   idTreino,
   idAluno,
 }: DuplicateTreinoRequest): Promise<DuplicateTreinoResponse> {
-  await api.patch(`treinos/${idTreino}`, {
-    json: {
-      idTreino,
-      idAluno,
-    },
-  })
+  return await api
+    .patch(`treinos/${idTreino}`, {
+      json: {
+        idTreino,
+        idAluno,
+      },
+    })
+    .json<GetTreinoResponse>()
 }

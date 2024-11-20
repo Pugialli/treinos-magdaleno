@@ -1,3 +1,4 @@
+import type { GetTreinoResponse } from '@/app/api/treinos/[id]/get-treino'
 import type { CreateAndUpdateExerciciosTreino } from '@/app/api/treinos/create-treino'
 
 import { api } from './api-client'
@@ -7,16 +8,18 @@ interface UpdateTreinoRequest {
   exercicios: CreateAndUpdateExerciciosTreino[]
 }
 
-type UpdateTreinoResponse = void
+type UpdateTreinoResponse = GetTreinoResponse
 
 export async function updateTreino({
   idTreino,
   exercicios,
 }: UpdateTreinoRequest): Promise<UpdateTreinoResponse> {
-  await api.put(`treinos/${idTreino}`, {
-    json: {
-      idTreino,
-      exercicios,
-    },
-  })
+  return await api
+    .put(`treinos/${idTreino}`, {
+      json: {
+        idTreino,
+        exercicios,
+      },
+    })
+    .json<GetTreinoResponse>()
 }

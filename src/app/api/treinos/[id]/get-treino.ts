@@ -32,6 +32,8 @@ export interface GetTreinoResponse {
   createdAt: Date
   aluno: {
     id: string
+    nome: string
+    slug: string
     idProfessor: string
   }
   exercicios: ExercicioFromTreino[]
@@ -79,6 +81,8 @@ export async function getTreino({ id }: GetTreinoProps) {
       aluno: {
         select: {
           id: true,
+          nome: true,
+          slug: true,
           idProfessor: true,
         },
       },

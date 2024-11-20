@@ -1,24 +1,30 @@
 'use client'
 
 import {
-  AlertTriangle,
-  BadgeCheck,
-  CircleMinus,
-  CirclePlus,
-  Loader2,
-} from 'lucide-react'
-import { useState } from 'react'
+  DndContext,
+  type DragEndEvent,
+  DragOverlay,
+  type DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
+import { arrayMove, SortableContext } from '@dnd-kit/sortable'
+import { AlertTriangle, BadgeCheck, Loader2 } from 'lucide-react'
+import { useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import type { GetExercicioResponse } from '@/app/api/exercicios/[id]/get-exercicio'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import { useFormState } from '@/hooks/use-form-state'
-import { orientacaoToPassos } from '@/utils/orientacao-passos'
+import { orientacaoToPassos, type Passo } from '@/utils/orientacao-passos'
 
 import { createExercicioAction, updateExercicioAction } from './actions'
+import { OrientacaoCard } from './orientacao-card'
+import { OrientacaoCardOverlay } from './orientacao-card-overlay'
 
 interface ExercicioFormProps {
   isUpdating?: boolean
@@ -31,24 +37,37 @@ export function ExercicioForm({
 }: ExercicioFormProps) {
   const formAction = isUpdating ? updateExercicioAction : createExercicioAction
 
-  const initialSteps = initialData
+  const initialSteps: Passo[] = initialData
     ? orientacaoToPassos(initialData.orientacao)
     : [
         {
+          id: crypto.randomUUID(),
           ordem: 1,
           orientacao: '',
         },
       ]
 
-  const [steps, setSteps] = useState(initialSteps)
+  const [steps, setSteps] = useState<Passo[]>(initialSteps)
+  const stepsId = useMemo(() => steps.map((step) => step.id), [steps])
+
+  const [activeStep, setActiveStep] = useState<Passo | null>(null)
 
   const [{ success, message, errors }, handleSubmit, isPending] =
     useFormState(formAction)
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 3, // 3px
+      },
+    }),
+  )
 
   function addStep() {
     setSteps((prevSteps) => [
       ...prevSteps,
       {
+        id: crypto.randomUUID(),
         ordem: prevSteps.length + 1,
         orientacao: '',
       },
@@ -57,6 +76,48 @@ export function ExercicioForm({
 
   function removeStep() {
     setSteps((prevSteps) => prevSteps.slice(0, -1))
+  }
+
+  function updateStep(id: string, content: string) {
+    setSteps((prevSteps) => {
+      return prevSteps.map((step) => {
+        console.log(step)
+        if (step.id !== id) return step
+        return {
+          ...step,
+          orientacao: content,
+        }
+      })
+    })
+  }
+
+  function onDragStart(event: DragStartEvent) {
+    if (event.active.data.current?.type === 'Passo') {
+      setActiveStep(event.active.data.current.step)
+    }
+  }
+
+  function onDragEnd(event: DragEndEvent) {
+    setActiveStep(null)
+
+    const { active, over } = event
+
+    if (!over) return
+
+    const activeStepId = active.id
+    const overStepId = over.id
+
+    if (activeStepId === overStepId) return
+
+    setSteps((steps) => {
+      const activeStepIndex = steps.findIndex(
+        (step) => step.id === activeStepId,
+      )
+
+      const overStepIndex = steps.findIndex((step) => step.id === overStepId)
+
+      return arrayMove(steps, activeStepIndex, overStepIndex)
+    })
   }
 
   return (
@@ -114,54 +175,35 @@ export function ExercicioForm({
 
       <div className="space-y-1">
         <div>Orientação</div>
-
-        {steps.map((step, index) => (
-          <div key={step.ordem}>
-            <div className="flex gap-2">
-              <Label
-                htmlFor={`orientacoes[${index}].orientacao`}
-                className="w-4"
-              >
-                {step.ordem}.
-              </Label>
-              <Input
-                name={`orientacoes[${index}].ordem`}
-                id={`orientacoes[${index}].ordem`}
-                type="hidden"
-                defaultValue={step.ordem}
+        <DndContext
+          sensors={sensors}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+        >
+          <SortableContext items={stepsId}>
+            {steps.map((step, index) => (
+              <OrientacaoCard
+                key={step.id}
+                index={index}
+                step={step}
+                addStep={addStep}
+                removeStep={removeStep}
+                updateStep={updateStep}
               />
-              <Textarea
-                name={`orientacoes[${index}].orientacao`}
-                id={`orientacoes[${index}].orientacao`}
-                defaultValue={step.orientacao}
-              />
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="default"
-                  size="icon"
-                  onClick={addStep}
-                  type="button"
-                >
-                  <CirclePlus className="size-4" />
-                </Button>
-                <Button
-                  variant="destructive"
-                  size="icon"
-                  onClick={removeStep}
-                  disabled={step.ordem === 1}
-                  type="button"
-                >
-                  <CircleMinus className="size-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        ))}
-        {errors?.orientacoes && (
-          <p className="text-xs font-medium text-red-500 dark:text-red-400">
-            {errors.orientacoes[0]}
-          </p>
-        )}
+            ))}
+            {errors?.orientacoes && (
+              <p className="text-xs font-medium text-red-500 dark:text-red-400">
+                {errors.orientacoes[0]}
+              </p>
+            )}
+          </SortableContext>
+          {createPortal(
+            <DragOverlay>
+              {activeStep && <OrientacaoCardOverlay step={activeStep} />}
+            </DragOverlay>,
+            document.body,
+          )}
+        </DndContext>
       </div>
 
       <Button className="w-full" type="submit" disabled={isPending}>

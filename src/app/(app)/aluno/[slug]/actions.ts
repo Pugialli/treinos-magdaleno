@@ -1,12 +1,16 @@
 'use server'
 
 import { HTTPError } from 'ky'
+import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
+import type { GetTreinoResponse } from '@/app/api/treinos/[id]/get-treino'
+import { deleteTreino } from '@/http/delete-treino'
 import { duplicateTreino } from '@/http/duplicate-treino'
+import { getTreino } from '@/http/get-treino'
 
 const duplicateTreinoSchema = z.object({
-  idAluno: z.string(),
+  idAluno: z.string().min(4, { message: 'Aluno não selecionado' }),
   idTreino: z.string(),
 })
 
@@ -21,8 +25,10 @@ export async function duplicateTreinoAction(data: FormData) {
 
   const { idAluno, idTreino } = result.data
 
+  let treino: GetTreinoResponse = await getTreino(idTreino)
+
   try {
-    await duplicateTreino({
+    treino = await duplicateTreino({
       idAluno,
       idTreino,
     })
@@ -34,6 +40,10 @@ export async function duplicateTreinoAction(data: FormData) {
     }
 
     console.error(err)
+
+    treino = await getTreino(idTreino)
+
+    redirect(`/aluno/${treino.aluno.slug}?status=error`)
     return {
       success: false,
       message: 'Erro inesperado, tente novamente em alguns minutos',
@@ -41,9 +51,16 @@ export async function duplicateTreinoAction(data: FormData) {
     }
   }
 
+  redirect(`/aluno/${treino.aluno.slug}?status=success`)
   return {
     success: true,
     message: 'Treino duplicado com sucesso',
     errors: null,
   }
+}
+
+export async function removeTreinoAction(treinoId: string) {
+  await deleteTreino(treinoId)
+
+  // revalidateTag(`${currentOrg}/members`)
 }

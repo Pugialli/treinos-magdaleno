@@ -73,7 +73,15 @@ export async function createExercicioAction(data: FormData) {
 
   const { nome, categoria, orientacoes } = result.data
 
-  const orientacaoConcat = passosToOrientacao(orientacoes)
+  const orientacaoConcat = passosToOrientacao(
+    orientacoes.map((orientacao) => {
+      return {
+        id: '',
+        ordem: orientacao.ordem,
+        orientacao: orientacao.orientacao,
+      }
+    }),
+  )
 
   try {
     await createExercicio({
@@ -121,7 +129,15 @@ export async function updateExercicioAction(data: FormData) {
 
   const { id, nome, categoria, orientacoes } = result.data
 
-  const orientacaoConcat = passosToOrientacao(orientacoes)
+  const orientacaoConcat = passosToOrientacao(
+    orientacoes.map((orientacao) => {
+      return {
+        id: '',
+        ordem: orientacao.ordem,
+        orientacao: orientacao.orientacao,
+      }
+    }),
+  )
 
   try {
     if (id) {
