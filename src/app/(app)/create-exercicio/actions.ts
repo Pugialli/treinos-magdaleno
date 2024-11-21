@@ -17,17 +17,14 @@ const exercicioSchema = z.object({
   orientacoes: z.array(
     z.object({
       ordem: z.number(),
-      orientacao: z.string(),
+      orientacao: z.string().min(1, { message: 'Orientação vazia' }),
     }),
-    {
-      message: 'Deve haver pelo menos um passo',
-    },
   ),
   id: z.string().optional(),
 })
 
 function formatData(data: FormData) {
-  const entries = Object.fromEntries(data)
+  const entries = Object.fromEntries(data) as Record<string, string>
 
   // Inicializa o array de orientações
   const orientacoes: Passo[] = []
@@ -44,7 +41,7 @@ function formatData(data: FormData) {
 
     if (orientacaoMatch) {
       const index = parseInt(orientacaoMatch[1], 10)
-      const textoOrientacao = entries[key] as string
+      const textoOrientacao = entries[key]
       orientacoes[index] = {
         ...orientacoes[index],
         orientacao: textoOrientacao,
@@ -52,9 +49,14 @@ function formatData(data: FormData) {
     }
   })
 
+  // Filtra elementos inválidos e ordena o array por `ordem`
+  const orientacoesOrdenadas = orientacoes
+    .filter((orientacao) => orientacao && orientacao.ordem !== undefined)
+    .sort((a, b) => a.ordem - b.ordem)
+
   return {
     ...entries,
-    orientacoes, // Garante que `orientacoes` seja compatível com o schema
+    orientacoes: orientacoesOrdenadas,
   }
 }
 

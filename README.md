@@ -37,4 +37,6 @@ Este projeto foi desenvolvido para um cliente que é Fisioterapeuta e educador f
 - [ ] ⁠reordenar as fotos de um exercício;
 
 ## Pontos de correção antes do go-live
-❌
+- Se você tentar reordenar mais de uma vez o mesmo item no dialog ele fica travado até você reiniciar o dialog
+
+<!-- ❌ -->

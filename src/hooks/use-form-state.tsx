@@ -3,7 +3,7 @@ import { type FormEvent, useState, useTransition } from 'react'
 export interface FormState {
   success: boolean
   message: string | null
-  errors: Record<string, string[]> | null
+  errors: Record<string, string[]> | null | Record<string, string[]>
 }
 
 export function useFormState(

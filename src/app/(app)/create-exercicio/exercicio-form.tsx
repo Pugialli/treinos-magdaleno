@@ -1,20 +1,22 @@
 'use client'
 
-import {
-  DndContext,
-  type DragEndEvent,
-  DragOverlay,
-  type DragStartEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
+import { type DragEndEvent, type DragStartEvent } from '@dnd-kit/core'
 import { arrayMove, SortableContext } from '@dnd-kit/sortable'
-import { AlertTriangle, BadgeCheck, Loader2 } from 'lucide-react'
+import { AlertTriangle, ArrowUpDown, BadgeCheck, Loader2 } from 'lucide-react'
 import { useMemo, useState } from 'react'
-import { createPortal } from 'react-dom'
 
 import type { GetExercicioResponse } from '@/app/api/exercicios/[id]/get-exercicio'
+import {
+  ReorderDialog,
+  ReorderDialogContent,
+  ReorderDialogContext,
+  ReorderDialogDescription,
+  ReorderDialogHeader,
+  ReorderDialogItem,
+  ReorderDialogItemOverlay,
+  ReorderDialogTitle,
+  ReorderDialogTrigger,
+} from '@/components/reorder-dialog'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -24,7 +26,7 @@ import { orientacaoToPassos, type Passo } from '@/utils/orientacao-passos'
 
 import { createExercicioAction, updateExercicioAction } from './actions'
 import { OrientacaoCard } from './orientacao-card'
-import { OrientacaoCardOverlay } from './orientacao-card-overlay'
+import { OrientacaoCardFixed } from './orientacao-card-fixed'
 
 interface ExercicioFormProps {
   isUpdating?: boolean
@@ -41,7 +43,7 @@ export function ExercicioForm({
     ? orientacaoToPassos(initialData.orientacao)
     : [
         {
-          id: crypto.randomUUID(),
+          id: '1',
           ordem: 1,
           orientacao: '',
         },
@@ -55,33 +57,27 @@ export function ExercicioForm({
   const [{ success, message, errors }, handleSubmit, isPending] =
     useFormState(formAction)
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 3, // 3px
-      },
-    }),
-  )
-
   function addStep() {
-    setSteps((prevSteps) => [
-      ...prevSteps,
-      {
-        id: crypto.randomUUID(),
-        ordem: prevSteps.length + 1,
-        orientacao: '',
-      },
-    ])
+    setSteps((prevSteps) => {
+      const nextId = Number(prevSteps[prevSteps.length - 1].id) + 1
+      return [
+        ...prevSteps,
+        {
+          id: nextId.toString(),
+          ordem: prevSteps.length + 1,
+          orientacao: '',
+        },
+      ]
+    })
   }
 
-  function removeStep() {
-    setSteps((prevSteps) => prevSteps.slice(0, -1))
+  function removeStep(id: string) {
+    setSteps((prevSteps) => prevSteps.filter((step) => step.id !== id))
   }
 
   function updateStep(id: string, content: string) {
     setSteps((prevSteps) => {
       return prevSteps.map((step) => {
-        console.log(step)
         if (step.id !== id) return step
         return {
           ...step,
@@ -93,7 +89,9 @@ export function ExercicioForm({
 
   function onDragStart(event: DragStartEvent) {
     if (event.active.data.current?.type === 'Passo') {
-      setActiveStep(event.active.data.current.step)
+      setActiveStep(event.active.data.current.sortableItem)
+    } else {
+      setActiveStep(null)
     }
   }
 
@@ -117,6 +115,12 @@ export function ExercicioForm({
       const overStepIndex = steps.findIndex((step) => step.id === overStepId)
 
       return arrayMove(steps, activeStepIndex, overStepIndex)
+    })
+
+    setSteps((steps) => {
+      return steps.map((step, index) => {
+        return { ...step, ordem: index + 1 }
+      })
     })
   }
 
@@ -174,8 +178,62 @@ export function ExercicioForm({
       </div>
 
       <div className="space-y-1">
-        <div>Orientação</div>
-        <DndContext
+        <div className="flex items-center gap-2">
+          <div>Orientação</div>
+          <ReorderDialog>
+            <ReorderDialogTrigger asChild>
+              <Button variant="default" size="sm" type="button">
+                <ArrowUpDown className="size-4" /> Reordenar passos
+              </Button>
+            </ReorderDialogTrigger>
+            <ReorderDialogContent>
+              <ReorderDialogHeader>
+                <ReorderDialogTitle>Reordenar Orientações</ReorderDialogTitle>
+                <ReorderDialogDescription>
+                  Ordene abaixo como preferir
+                </ReorderDialogDescription>
+              </ReorderDialogHeader>
+              <ReorderDialogContext
+                onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
+              >
+                <SortableContext items={stepsId}>
+                  {steps.map((step, index) => (
+                    <ReorderDialogItem
+                      key={step.id}
+                      sortableItem={step}
+                      type="Passo"
+                      className="flex h-12 gap-2 bg-secondary/20 p-4"
+                    >
+                      <OrientacaoCardFixed index={index + 1} step={step} />
+                    </ReorderDialogItem>
+                  ))}
+                </SortableContext>
+                {activeStep && (
+                  <ReorderDialogItemOverlay
+                    sortableItem={activeStep}
+                    type="Passo"
+                    className="flex h-12 gap-2 p-4"
+                  >
+                    <OrientacaoCardFixed step={activeStep} />
+                  </ReorderDialogItemOverlay>
+                )}
+              </ReorderDialogContext>
+            </ReorderDialogContent>
+          </ReorderDialog>
+        </div>
+        {steps.map((step, index) => (
+          <OrientacaoCard
+            key={step.id}
+            index={index}
+            step={step}
+            errors={errors}
+            addStep={addStep}
+            removeStep={removeStep}
+            updateStep={updateStep}
+          />
+        ))}
+        {/* <DndContext
           sensors={sensors}
           onDragStart={onDragStart}
           onDragEnd={onDragEnd}
@@ -203,7 +261,7 @@ export function ExercicioForm({
             </DragOverlay>,
             document.body,
           )}
-        </DndContext>
+        </DndContext> */}
       </div>
 
       <Button className="w-full" type="submit" disabled={isPending}>
