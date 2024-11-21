@@ -233,35 +233,6 @@ export function ExercicioForm({
             updateStep={updateStep}
           />
         ))}
-        {/* <DndContext
-          sensors={sensors}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
-        >
-          <SortableContext items={stepsId}>
-            {steps.map((step, index) => (
-              <OrientacaoCard
-                key={step.id}
-                index={index}
-                step={step}
-                addStep={addStep}
-                removeStep={removeStep}
-                updateStep={updateStep}
-              />
-            ))}
-            {errors?.orientacoes && (
-              <p className="text-xs font-medium text-red-500 dark:text-red-400">
-                {errors.orientacoes[0]}
-              </p>
-            )}
-          </SortableContext>
-          {createPortal(
-            <DragOverlay>
-              {activeStep && <OrientacaoCardOverlay step={activeStep} />}
-            </DragOverlay>,
-            document.body,
-          )}
-        </DndContext> */}
       </div>
 
       <Button className="w-full" type="submit" disabled={isPending}>
