@@ -1,22 +1,16 @@
 'use client'
 
-import { AlertTriangle, Loader2 } from 'lucide-react'
+import { AlertTriangle, Loader2, Lock, Mail } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 
+import { FormInput } from '@/components/form-input'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { useFormState } from '@/hooks/use-form-state'
 
 import { signInWithEmailAndPassword } from './actions'
 
 export function SignInForm() {
-  // const [{ success, message, errors }, formAction, isPending] = useActionState(
-  //   signInWithEmailAndPassword,
-  //   { success: false, message: null, errors: null },
-  // )
-
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -26,12 +20,10 @@ export function SignInForm() {
   )
 
   return (
-    <div className="space-y-4">
-      <form
-        onSubmit={handleSubmit}
-        // action={formAction}
-        className="space-y-4"
-      >
+    <form onSubmit={handleSubmit}>
+      <div className="space-y-8">
+        <h1 className="text-center text-4xl font-bold text-primary">Log In</h1>
+
         {success === false && message && (
           <Alert variant="destructive">
             <AlertTriangle className="size-4" />
@@ -42,35 +34,29 @@ export function SignInForm() {
           </Alert>
         )}
 
-        <div className="space-y-1">
-          <Label htmlFor="email">E-mail</Label>
-          <Input
-            name="email"
-            type="email"
-            id="email"
-            defaultValue={searchParams.get('email') ?? ''}
-          />
+        <FormInput
+          label="E-mail"
+          errors={errors}
+          icon={Mail}
+          name="email"
+          id="email"
+          type="email"
+          defaultValue={searchParams.get('email') ?? ''}
+        />
 
-          {errors?.email && (
-            <p className="text-xs font-medium text-red-500 dark:text-red-400">
-              {errors.email[0]}
-            </p>
-          )}
-        </div>
-        <div className="space-y-1">
-          <Label htmlFor="password">Senha</Label>
-          <Input name="password" type="password" id="password" />
+        <FormInput
+          label="Senha"
+          errors={errors}
+          icon={Lock}
+          name="password"
+          id="password"
+          hidable
+        />
 
-          {errors?.password && (
-            <p className="text-xs font-medium text-red-500 dark:text-red-400">
-              {errors.password[0]}
-            </p>
-          )}
-        </div>
         <Button className="w-full" type="submit" disabled={isPending}>
-          {isPending ? <Loader2 className="size-4 animate-spin" /> : 'Logar'}
+          {isPending ? <Loader2 className="size-4 animate-spin" /> : 'Entrar'}
         </Button>
-      </form>
-    </div>
+      </div>
+    </form>
   )
 }
