@@ -1,4 +1,4 @@
-import { ChevronDown, LogOut } from 'lucide-react'
+import { LogOut } from 'lucide-react'
 import { redirect } from 'next/navigation'
 
 import { loggedUser } from '@/auth/auth'
@@ -31,15 +31,10 @@ export async function ProfileButton() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-3 outline-none">
-        <div className="flex flex-col items-end">
-          <span className="text-sm font-medium">{user.name}</span>
-          <span className="text-xs text-muted-foreground">{user.email}</span>
-        </div>
-        <Avatar className="size-8">
+        <Avatar className="size-12 border-2 border-primary">
           {user.avatarUrl && <AvatarImage src={user.avatarUrl} />}
           <AvatarFallback>{AvatarFB}</AvatarFallback>
         </Avatar>
-        <ChevronDown className="size-4 text-muted-foreground" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem asChild>

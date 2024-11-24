@@ -1,12 +1,11 @@
 'use client'
 
-import { CircleX, ClipboardList, Dumbbell, Pencil, Plus } from 'lucide-react'
-import Link from 'next/link'
-import { useState } from 'react'
+import dayjs from 'dayjs'
+import { CircleEllipsis } from 'lucide-react'
 
-import { DeleteAlunoDialog } from '@/components/delete-aluno-dialog'
-import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { SheetActionsAluno } from '@/components/sheet-actions-aluno'
 import { Button } from '@/components/ui/button'
+import { Sheet, SheetTrigger } from '@/components/ui/sheet'
 import { TableCell, TableRow } from '@/components/ui/table'
 
 import type { GetAlunosWithTreinoResponse } from '../api/professor/[id]/alunos/get-alunos'
@@ -16,12 +15,10 @@ interface AlunosTableRowProps {
 }
 
 export function AlunosTablerow({ aluno }: AlunosTableRowProps) {
-  const [open, setOpen] = useState(false)
-
-  const treinoId = aluno.treinos.length > 0 ? aluno.treinos[0].id : ''
+  const ultimoTreinoDate = aluno.treinos[aluno.treinos.length - 1].createdAt
 
   return (
-    <AlertDialog open={open} onOpenChange={setOpen} key={aluno.id}>
+    <Sheet key={aluno.id}>
       <TableRow>
         <TableCell className="py-2.5">
           <div className="flex flex-col">
@@ -36,63 +33,24 @@ export function AlunosTablerow({ aluno }: AlunosTableRowProps) {
           </div>
         </TableCell>
         <TableCell className="py-2.5">
-          <div className="flex items-center justify-end gap-2">
-            <Button
-              size="icon"
-              variant="outline"
-              disabled={treinoId === ''}
-              asChild={treinoId !== ''}
-            >
-              <Link href={`/aluno/${aluno.slug}/treino/${treinoId}`}>
-                <Dumbbell className="size-4" />
-              </Link>
-            </Button>
-
-            <Button size="icon" variant="outline" asChild>
-              <Link href={`/aluno/${aluno.slug}`}>
-                <ClipboardList className="size-4" />
-              </Link>
-            </Button>
-
-            <Button size="icon" variant="outline" asChild>
-              <Link href={`/create-treino?aluno=${aluno.slug}`}>
-                <Plus className="size-4" />
-              </Link>
-            </Button>
-
-            {/* <form action={removeMemberAction.bind(null, member.id)}>
-                          <Button type="submit" size="sm" variant="destructive">
-                            <UserMinus className="mr-2 size-4" />
-                            Remove
-                          </Button>
-                        </form> */}
+          <div className="flex flex-col">
+            <span className="inline-flex items-center gap-2">
+              {dayjs(ultimoTreinoDate).format('DD/MM/YYYY')}
+            </span>
           </div>
         </TableCell>
         <TableCell className="py-2.5">
           <div className="flex items-center justify-end gap-2">
-            <Button size="icon" variant="outline" asChild>
-              <Link href={`/aluno/${aluno.slug}/edit`}>
-                <Pencil className="size-4" />
-              </Link>
-            </Button>
-
-            <AlertDialogTrigger asChild>
-              <Button size="icon" variant="destructive" className="p-0">
-                <CircleX className="size-4" />
+            <SheetTrigger asChild>
+              <Button size="icon" variant="tertiary">
+                <CircleEllipsis className="size-6" />
               </Button>
-            </AlertDialogTrigger>
-
-            {/* <form action={removeMemberAction.bind(null, member.id)}>
-                          <Button type="submit" size="sm" variant="destructive">
-                            <UserMinus className="mr-2 size-4" />
-                            Remove
-                          </Button>
-                        </form> */}
+            </SheetTrigger>
           </div>
         </TableCell>
       </TableRow>
 
-      <DeleteAlunoDialog slug={aluno.slug} nome={aluno.nome} openFn={setOpen} />
-    </AlertDialog>
+      <SheetActionsAluno aluno={aluno} />
+    </Sheet>
   )
 }

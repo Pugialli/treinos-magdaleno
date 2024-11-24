@@ -15,17 +15,17 @@ export async function AlunosList() {
 
   return (
     <div className="space-y-2">
-      <div className="rounded border">
+      <div className="">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="rounded-tl-sm">Nome</TableHead>
+              <TableHead>Nome</TableHead>
               <TableHead>Objetivo</TableHead>
-              <TableHead>Treinos</TableHead>
-              <TableHead className="rounded-tr-sm">Ações</TableHead>
+              <TableHead className="text-nowrap">Último treino</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="bg-primary-foreground">
             {alunos && alunos.length > 0 ? (
               alunos.map((aluno) => {
                 return <AlunosTablerow key={aluno.id} aluno={aluno} />

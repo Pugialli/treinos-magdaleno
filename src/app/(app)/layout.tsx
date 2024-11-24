@@ -4,6 +4,8 @@ import { redirect } from 'next/navigation'
 import type { ReactNode } from 'react'
 
 import { isAuthenticated } from '@/auth/auth'
+import { SheetSidebar } from '@/components/sheet-sidebar'
+import { Sheet } from '@/components/ui/sheet'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -20,7 +22,10 @@ export default async function AdminLayout({
 
   return (
     <div>
-      {children}
+      <Sheet>
+        {children}
+        <SheetSidebar />
+      </Sheet>
       {sheet}
     </div>
   )

@@ -1,8 +1,7 @@
-import { PlusCircle } from 'lucide-react'
+import { PlusSquare } from 'lucide-react'
 import Link from 'next/link'
 
 import { Header } from '@/components/header'
-import { Tabs } from '@/components/tabs'
 import { Button } from '@/components/ui/button'
 
 import { AlunosList } from './alunos-list'
@@ -11,21 +10,18 @@ export default function Home() {
   return (
     <>
       <Header />
-      <Tabs />
 
-      <div className="space-y-4 p-4">
+      <div className="space-y-8 p-8">
         <h1 className="pb-2 text-2xl font-bold">Alunos</h1>
 
-        <div className="space-y-4">
-          <Button size="sm" variant="secondary" asChild>
-            <Link href={`/create-aluno`}>
-              <PlusCircle className="mr-2 size-4" />
-              Novo aluno
-            </Link>
-          </Button>
+        <AlunosList />
 
-          <AlunosList />
-        </div>
+        <Button size="lg" asChild>
+          <Link href={`/create-aluno`}>
+            <PlusSquare className="size-6" />
+            Novo aluno
+          </Link>
+        </Button>
       </div>
     </>
   )
