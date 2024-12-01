@@ -5,6 +5,10 @@ interface UpdateExercicioRequest {
   nome: string
   categoria: string
   orientacao: string
+  fotos: {
+    ordem: number
+    avatarUrl: string
+  }[]
 }
 
 type UpdateExercicioResponse = void
@@ -14,6 +18,7 @@ export async function updateExercicio({
   nome,
   categoria,
   orientacao,
+  fotos,
 }: UpdateExercicioRequest): Promise<UpdateExercicioResponse> {
   await api.patch(`exercicios/${id}`, {
     json: {
@@ -21,6 +26,7 @@ export async function updateExercicio({
       nome,
       categoria,
       orientacao,
+      fotos,
     },
   })
 }

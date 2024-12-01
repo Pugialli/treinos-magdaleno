@@ -19,7 +19,7 @@ export async function TreinosList() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="rounded-tl-sm">Criado</TableHead>
+              <TableHead className="rounded-tl-sm">Criado há</TableHead>
               <TableHead>Aluno</TableHead>
               <TableHead>Número de exercícios</TableHead>
               <TableHead className="rounded-tr-sm">Ações</TableHead>

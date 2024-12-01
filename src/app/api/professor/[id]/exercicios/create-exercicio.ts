@@ -5,6 +5,10 @@ export interface CreateExercicioProps {
   categoria: string
   orientacao: string
   idProfessor: string
+  fotos: {
+    ordem: number
+    avatarUrl: string
+  }[]
 }
 
 export async function createExercicio({
@@ -12,8 +16,9 @@ export async function createExercicio({
   categoria,
   orientacao,
   idProfessor,
+  fotos,
 }: CreateExercicioProps) {
-  return await prisma.exercicio.create({
+  const exercicio = await prisma.exercicio.create({
     data: {
       nome,
       categoria,
@@ -21,4 +26,16 @@ export async function createExercicio({
       idProfessor,
     },
   })
+
+  fotos.map(async (foto) => {
+    return await prisma.foto.create({
+      data: {
+        idExercicio: exercicio.id,
+        ordem: foto.ordem,
+        avatarUrl: foto.avatarUrl,
+      },
+    })
+  })
+
+  return exercicio
 }

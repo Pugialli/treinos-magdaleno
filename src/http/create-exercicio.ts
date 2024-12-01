@@ -5,6 +5,10 @@ interface CreateExercicioRequest {
   categoria: string
   orientacao: string
   idProfessor: string
+  fotos: {
+    ordem: number
+    avatarUrl: string
+  }[]
 }
 
 type CreateExercicioResponse = void
@@ -13,6 +17,7 @@ export async function createExercicio({
   nome,
   categoria,
   orientacao,
+  fotos,
   idProfessor,
 }: CreateExercicioRequest): Promise<CreateExercicioResponse> {
   await api.post(`professor/${idProfessor}/exercicios`, {
@@ -20,6 +25,7 @@ export async function createExercicio({
       nome,
       categoria,
       orientacao,
+      fotos,
       idProfessor,
     },
   })

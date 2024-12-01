@@ -51,7 +51,7 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
           <Card
             className={cn(
               colSpanCarga,
-              `flex w-full items-center justify-center border-0 bg-primary/10 py-2`,
+              `flex w-full items-center justify-center border-0 bg-primary/10 py-2 text-foreground`,
             )}
           >
             <Dumbbell className="mr-2 size-4" />
@@ -64,7 +64,7 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
           <Card
             className={cn(
               colSpanIsometria,
-              `flex w-full items-center justify-center border-0 bg-primary/10 py-2`,
+              `flex w-full items-center justify-center border-0 bg-primary/10 py-2 text-foreground`,
             )}
           >
             <Clock4 className="mr-2 size-4" />
@@ -74,7 +74,7 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
           </Card>
         )}
         {exercicio.repeticoes && (
-          <Card className="col-span-1 flex w-full items-center justify-center border-0 bg-primary/10 py-2">
+          <Card className="col-span-1 flex w-full items-center justify-center border-0 bg-primary/10 py-2 text-foreground">
             <RefreshCcw className="mr-2 size-4" />
             <p className="text-lg">
               Repetições:{' '}
@@ -85,7 +85,7 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
         <Card
           className={cn(
             colSpanSerie,
-            `flex w-full items-center justify-center border-0 bg-primary/10 py-2`,
+            `flex w-full items-center justify-center border-0 bg-primary/10 py-2 text-foreground`,
           )}
         >
           <ChevronsRight className="mr-2 size-4" />
@@ -94,7 +94,9 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
           </p>
         </Card>
         {exercicio.obs && (
-          <span className={`${roboto.className} col-span-2 text-sm font-light`}>
+          <span
+            className={`${roboto.className} col-span-2 text-sm font-light text-foreground`}
+          >
             * {exercicio.obs}
           </span>
         )}
@@ -104,7 +106,10 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
         <div className="flex flex-col gap-2">
           {passos.map((passo) => {
             return (
-              <div className="flex gap-4 pb-2" key={passo.orientacao}>
+              <div
+                className="flex gap-4 pb-2 text-foreground"
+                key={passo.orientacao}
+              >
                 <p>{passo.ordem}.</p>
                 <p>{passo.orientacao}</p>
               </div>
@@ -113,7 +118,7 @@ export function ExercicioDetalhado({ exercicio }: ExercicioDetalhadoProps) {
         </div>
       </div>
       {descanso !== '0s' && (
-        <Card className="col-span-1 flex w-full items-center justify-center border-0 bg-primary/10 py-2">
+        <Card className="col-span-1 flex w-full items-center justify-center border-0 bg-primary/10 py-2 text-foreground">
           <CircleAlert className="mr-2 size-4" />
           <p className="text-lg">
             Descanse <span className="font-bold">{descanso}</span> entre as

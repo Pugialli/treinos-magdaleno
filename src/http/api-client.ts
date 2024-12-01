@@ -23,3 +23,7 @@ export const api = ky.create({
     ],
   },
 })
+
+export const cloudinaryAPI = ky.create({
+  prefixUrl: process.env.NEXT_PUBLIC_API_CLOUDINARY,
+})

@@ -16,6 +16,8 @@ interface TreinosTableRowProps {
   treino: GetTreinoFromProfessorResponse
 }
 
+require('dayjs/locale/pt-br')
+
 dayjs.extend(relativeTime)
 dayjs.locale('pt-br')
 
@@ -28,7 +30,7 @@ export function TreinosTablerow({ treino }: TreinosTableRowProps) {
         <TableCell className="py-2.5">
           <div className="flex flex-col">
             <span className="inline-flex items-center gap-2 text-nowrap">
-              {dayjs(treino.createdAt).fromNow()}
+              {dayjs(treino.createdAt).fromNow(true)}
             </span>
           </div>
         </TableCell>

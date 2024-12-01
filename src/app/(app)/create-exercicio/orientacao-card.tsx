@@ -44,13 +44,7 @@ export function OrientacaoCard({
   const style = { transition, transform: CSS.Transform.toString(transform) }
 
   if (isDragging) {
-    return (
-      <Card
-        ref={setNodeRef}
-        style={style}
-        className="flex h-28 gap-2 border-none bg-secondary/20 p-4"
-      />
-    )
+    return <Card ref={setNodeRef} style={style} className="flex h-28 gap-2" />
   }
 
   const orientacaoIndex = Number(step.id)

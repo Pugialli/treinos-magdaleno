@@ -20,6 +20,12 @@ const exercicioSchema = z.object({
       orientacao: z.string().min(1, { message: 'Orientação vazia' }),
     }),
   ),
+  fotos: z.array(
+    z.object({
+      ordem: z.number(),
+      avatarUrl: z.string(),
+    }),
+  ),
   id: z.string().optional(),
 })
 
@@ -73,7 +79,7 @@ export async function createExercicioAction(data: FormData) {
     return { success: false, message: null, errors }
   }
 
-  const { nome, categoria, orientacoes } = result.data
+  const { nome, categoria, orientacoes, fotos } = result.data
 
   const orientacaoConcat = passosToOrientacao(
     orientacoes.map((orientacao) => {
@@ -91,6 +97,7 @@ export async function createExercicioAction(data: FormData) {
       idProfessor,
       categoria,
       orientacao: orientacaoConcat,
+      fotos,
     })
 
     revalidateTag(`${idProfessor}/exercicios`)
@@ -129,7 +136,7 @@ export async function updateExercicioAction(data: FormData) {
     return { success: false, message: null, errors }
   }
 
-  const { id, nome, categoria, orientacoes } = result.data
+  const { id, nome, categoria, orientacoes, fotos } = result.data
 
   const orientacaoConcat = passosToOrientacao(
     orientacoes.map((orientacao) => {
@@ -148,6 +155,7 @@ export async function updateExercicioAction(data: FormData) {
         nome,
         categoria,
         orientacao: orientacaoConcat,
+        fotos,
       })
 
       revalidateTag(`${idProfessor}/exercicios`)
